@@ -58,6 +58,10 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 - 6. **END**
      - If you did the previous steps correctly (sorry if didn't work) you can do: ``cd ~/OSDev`` then execute: ``make all``
      - If you are on Windows, try to adapt the code of the Makefile!
+    
+## HOW TO RUN ON QEMU
+**RUN THIS COMMAND**:
+    - ``qemu-system-x86_64 -monitor stdio -hda ~/OSDev/90HzOS/OS/90HzOS.bin``
      
      
      
