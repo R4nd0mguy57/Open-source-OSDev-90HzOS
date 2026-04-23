@@ -2,12 +2,12 @@
 This is the begining of my project _90HzOS_. (Sorry for bad english)
 
 ## How To compile
-1. First you will need an emulator like qemu to run the 'OS' and an assembler:
-**On Arch Linux** (btw)
-Run these two commands below:
-- ``sudo pacman -Suy  # update packages & packages list``
-- ``sudo pacman -S nasm qemu-common``
-**On Ubuntu or any Debian based Linux Distro**
+1. First you will need an emulator like qemu to run the 'OS' and an assembler:\n
+**On Arch Linux** (btw)\n
+Run these two commands below:\n
+- ``sudo pacman -Suy  # update packages & packages list``\n
+- ``sudo pacman -S nasm qemu-common``\n
+**On Ubuntu or any Debian based Linux Distro**\n
 - ``sudo apt update && sudo apt full-upgrade -y``
 - ``sudo apt intall nasm qemu-common``
 **On Windows**
