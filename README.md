@@ -18,7 +18,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 - 2. Then create an **OSDev** folder in your **HOME DIRECTORY**
 - 3. Move all the content you downloaded from this repo into *~/OSDev*
 - 4. Then you will need cross-compilers:
-   - Install gnu binutils:
+    - Install gnu binutils:
          - ``mkdir /tmp/src``
          - ``cd /tmp/src``
          - ``curl -O https://ftp.gnu.org/gnu/binutils/binutils-with-gold-2.46.tar.xz``
@@ -27,7 +27,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
          - ``cd binutils-build``
          - ``../binutils-with-gold-2.46.tar.xz/configure --target=i386-elf --enable-multilib --disable-nls --disable-werror --prefix=/usr/var/i386elfgcc 2>&1 | tee configure.log``
          - ``sudo make all install 2>&1 | tee make.log``
-   - Install gcc cross compiler:
+    - Install gcc cross compiler:
          - ``cd /tmp/src``
          - ``curl -O https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz``make -j$(nproc)
          - ``tar xfv gcc-15.2.0.tar.xz``
