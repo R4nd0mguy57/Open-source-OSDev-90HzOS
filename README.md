@@ -2,6 +2,7 @@
 This is the begining of my project _90HzOS_. (Sorry for bad english)
 
 ## How To compile
+**PLZ NOTE THAT SOME COMMANDS WONT WORK ON WINDOWS, SO I RECOMMEND USING A UNIX/GNULinux SYSTEM**
 - 1. First you will need an emulator like qemu to run the 'OS' and an assembler:
 - **On Arch Linux** (btw)
 - Run these two commands below:
@@ -17,7 +18,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 
 - 2. Then create an **OSDev** folder in your **HOME DIRECTORY**
 - 3. Move all the content you downloaded from this repo into *~/OSDev*
-- 4. Then you will need cross-compilers:
+- 4. Then you will need a cross-compiler and a linker:
     - Install gnu binutils:
          - ``mkdir /tmp/src``
          - ``cd /tmp/src``
@@ -38,6 +39,25 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
          - ``sudo make all-target-libgcc -j$(nproc)``
          - ``sudo make install-gcc -j$(nproc)``
          - ``sudo make install-taget-libgcc -j$(nproc)``
+- 5. Add cross compilers to the **PATH**:
+         - On **UNIX/GNULinux**:
+             - **TEMP**:
+                 - To add the compilers to the PATH **temporarily** *(disapeare after closing bash session)*:
+                     - ``export PATH="/usr/var/i386elfgcc:$PATH"``
+             - To add it **permanantly**, you can edit your ~/.bashrc file:
+                 - ``nano ~/.bashrc``
+                 - Add this line at the end if file:
+                     - ``export PATH="/usr/var/i386elfgcc:$PATH"``
+         - On **Windows NT**:
+             - Search for: *Edit environment variables*
+             - Click on _edit environment variables_
+             - Click on **PATH**
+             - Then click  _edit_
+             - Then add the PATH to your cross compilers directory at the end
+             - Then apply changes and _reboot your computer_
+- 6. **END**
+     - If you did the previous steps correctly (sorry if didn't work) you can do: ``cd ~/OSDev`` then execute: ``make all``
+     - If you are on Windows, try to adapt the code of the Makefile!
      
      
      
