@@ -1,0 +1,12 @@
+cross/
+*.o
+*.dd
+*.img
+*.bin
+
+toolchain/
+opt/
+usr/
+var/
+
+*.log
