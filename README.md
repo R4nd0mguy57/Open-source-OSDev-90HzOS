@@ -29,11 +29,15 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
          - ``sudo make all install 2>&1 | tee make.log``
     - Install gcc cross compiler:
          - ``cd /tmp/src``
-         - ``curl -O https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz``make -j$(nproc)
+         - ``curl -O https://ftp.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz``
          - ``tar xfv gcc-15.2.0.tar.xz``
          - ``mkdir gcc-build``
          - ``cd gcc-build``
-         - ``../gcc-15.2.0/configure``
+         - ``../gcc-15.2.0/configure --target=i386-elf --prefix=/usr/var/i386elfgcc --disable-nls --disable-libssp --enable-language=c++ --without-headers``
+         - ``sudo make all-gcc -j$(nproc)``
+         - ``sudo make all-target-libgcc -j$(nproc)``
+         - ``sudo make install-gcc -j$(nproc)``
+         - ``sudo make install-taget-libgcc -j$(nproc)``
      
      
      
