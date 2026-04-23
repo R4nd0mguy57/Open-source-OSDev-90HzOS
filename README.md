@@ -5,11 +5,11 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 - 1. First you will need an emulator like qemu to run the 'OS' and an assembler:
 - **On Arch Linux** (btw)
 - Run these two commands below:
-- ``sudo pacman -Suy  # update packages & packages list``
-- ``sudo pacman -S nasm qemu-common``
+    - ``sudo pacman -Suy  # update packages & packages list``
+    - ``sudo pacman -S nasm qemu-common``
 - **On Ubuntu or any Debian based Linux Distro**
-- ``sudo apt update && sudo apt full-upgrade -y``
-- ``sudo apt intall nasm qemu-common``
+    - ``sudo apt update && sudo apt full-upgrade -y``
+    - ``sudo apt intall nasm qemu-common``
 - **On Windows**
 - Download the following files (you can also use curl with the link in PS):
   - ``https://www.nasm.us/pub/nasm/releasebuilds/3.02rc7/win64/nasm-3.02rc7-installer-x64.exe``
