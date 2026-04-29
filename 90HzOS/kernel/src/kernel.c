@@ -1,7 +1,7 @@
 #include "include/kernel.h"
-#include "include/keyboard/ps2.h"
-#include "include/stdio.h"
-#include "include/ports.h"
+#include "include/drivers/keyboard/ps2.h"
+#include "include/vga/stdio.h"
+#include "include/drivers/ports/ports.h"
 #include "../../prog/src/include/terminal.h"
 
 void main(){
@@ -12,25 +12,43 @@ void main(){
     init_idt();
     kb_init();
     enable_int();
+
     replace_string(string, "Initialized keyboard.\n");
     print_string(string, 0x0F, &position);
+
     replace_string(string, "Hello From 90HzOS!\n");
     print_string(string, 0x4F, &position);
-    terminal_entry(0, &position);
+
+    print_string("Source code: https://github.com/R4nd0mguy57/Open-source-OSDev-90HzOS/tree/main\n", 0x1F, &position);
+
+    next_entry(0, &position);
+    while (1){
+
+    }
     return ;
 }
 
-unsigned char handle_kb(){
-    int extended_key = 0;
-    unsigned char status = inb(KB_COMMAND);
-    unsigned char keycode = 0;
-    if (status & 1){
-        keycode = inb(KB_DATA);       // If status, scan kb
-    }
-    /*if (keycode == 0xE0){
-                                Coming soon ig
-    }*/
-    outb(PIC1_COMMAND, PIC_EOI);
-    return keycode;
-}
+int extended_key;
 
+unsigned char handle_kb(){
+    extern volatile unsigned char extended;
+    unsigned char keycode = 0;
+    if (!extended_key){
+        unsigned char status = inb(KB_COMMAND);
+        if (status & 1){
+            keycode = inb(KB_DATA);       // If status, scan kb
+        }
+        if (keycode == 0xE0){
+            extended_key = 1;
+            keycode = handle_kb();
+        }
+        outb(PIC1_COMMAND, PIC_EOI);
+        return keycode;
+    }
+    else {
+        keycode = inb(KB_DATA);
+        extended = 1;
+        extended_key = 0;
+        return keycode;
+    }
+}

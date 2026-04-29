@@ -1,5 +1,5 @@
-#include "../include/keyboard/ps2.h"
-#include "../include/ports.h"
+#include "../../include/drivers/keyboard/ps2.h"
+#include "../../include/drivers/ports/ports.h"
 
 
 struct IDT_entry IDT[256];        // 256 total ints

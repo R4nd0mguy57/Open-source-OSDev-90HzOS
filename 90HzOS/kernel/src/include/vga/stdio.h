@@ -1,15 +1,41 @@
 #ifndef STDIO_H
     #define STDIO_H
-    #include "kernel.h"
+    #include "../kernel.h"
+    #define MOVE_GRID_BEGIN_CHAR 0xB80A0
+    #define MOVE_GRID_BEGIN_ATT 0xB80A1
+    #define MOVE_GRID_END 0xB8000 + (80*24)*2
 
-        void clear_screen(){
-            for (unsigned int i=0; i<(VGA_SCREEN_WIDTH*VGA_SCREEN_HEIGHT); ++i){
-                *((unsigned char*)VRAM_CHAR_ADR+(i*2)) = 0;
-                *((unsigned char*)VRAM_ATT_ADR+(i*2)) = 0x0F;
+    void change_color(const char color, unsigned int *position){
+        *((unsigned char*)VRAM_ATT_ADR+(*position*2)) = color;
+    }
+    
+    void clear_screen(){
+        for (unsigned int i=0; i<(VGA_SCREEN_WIDTH*VGA_SCREEN_HEIGHT); ++i){
+            *((unsigned char*)VRAM_CHAR_ADR+(i*2)) = 0;
+            *((unsigned char*)VRAM_ATT_ADR+(i*2)) = 0x0F;
+        }
+    }
+    
+
+
+    void move_grid(unsigned int count){
+        for (unsigned int i=0; i!=count; ++i){
+            for (unsigned int j=0; j!=80*(25-1); ++j){
+                *((unsigned char*)VRAM_CHAR_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_CHAR+(j*2));
+                *((unsigned char*)VRAM_ATT_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_ATT+(j*2));
             }
         }
+        for (unsigned int i=0; i!=25; ++i){
+            *((unsigned char*)MOVE_GRID_END+(i*2)) = 0;
+            *((unsigned char*)MOVE_GRID_END+1+(i*2)) = 0;
+        }
+    }
 
     void print_char(const char displayed_char, const char attributes, unsigned int *position){
+        if (*position == 80*25){
+            move_grid(1);
+            *(position) -= 80;
+        }
         if (displayed_char != '\n' && displayed_char != '\t'){
             *((unsigned char*)VRAM_CHAR_ADR+(*position*2)) = displayed_char;
             *((unsigned char*)VRAM_ATT_ADR+(*position*2)) = attributes;
@@ -42,4 +68,5 @@
             *((unsigned char*)VRAM_ATT_ADR+(i*2)) = color;
         }
     }
+
 #endif

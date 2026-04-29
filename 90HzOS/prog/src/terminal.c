@@ -1,43 +1,64 @@
 #include "include/terminal.h"
 #include "../../kernel/src/include/string.h"
 #include "../../kernel/src/include/kernel.h"
-#include "../../kernel/src/include/keyboard/kb_tools.h"
+#include "../../kernel/src/include/drivers/keyboard/kb_tools.h"
 
-void terminal_entry(int clear, unsigned int *position){
+void next_entry(int clear, unsigned int *position){
+    init_keys();
     if (clear >= 1){
         clear_screen();
     }
-    print_string("--------------------------------------------------------------------------------Executed terminal\n", 0x0F, position);
-    prompt(position);
-    while(1){
+    print_string("--------------------------------------------------------------------------------Executed Prog", 0x0F, position);
 
-    }
+    prompt(position);
 }
+
+/*struct output {
+        unsigned char char1;
+        unsigned char char2;
+        unsigned char char3;
+        unsigned char char4;
+        unsigned char char5;
+        unsigned char char6;
+        unsigned char Altpressed;
+        unsigned char Ctrlpressed;
+        unsigned char ifchar;
+        unsigned char released;
+    };*/
 
 void prompt(unsigned int *position){
     print_string("\n[90HzOS]$ ", 0x0F, position);
-    unsigned char Oldkey = 0;
-    unsigned char key = 0;
-    char* key_att;
-    char full_command[256] = "";
+    print_char(0, 0xF0, position);
+    --*(position);
+    struct output trans_key;
+    unsigned char key=0;
+    unsigned Oldkey = key;
+    char full_command[4096];
     unsigned int command_pos = 0;
-    const unsigned int prompt_pos = *position;
-    extern volatile unsigned char Ctrl_pressed;
+    unsigned int prompt_pos = *(position);
     while (1){
         Oldkey = key;
         key = get_key();
-        if (Oldkey == key){
+        if (key == Oldkey){
             continue;
         }
-        key_att = get_att(key);
-        if (key_att[0] == '\0' && (!Ctrl_pressed)){
-            continue;
+        trans_key = transkey(key);
+        if (trans_key.char1 == '\r' || trans_key.char1 == '\t'){
+            if (trans_key.char1 == '\r' && !trans_key.released){
+                while (!trans_key.released){
+                    key = get_key();
+                    trans_key = transkey(key);
+                }
+                --*(position);
+                print_char(0, 0x0F, position);
+                prompt(position);
+                return;
+            }
+            else {
+                continue;
+            }
         }
-        if (key_att[7] && key_att[0] == 'c' && key_att[1] == 'd'){
-            print_string("BONDOUR!!", 0x04, position);
-            continue;
-        }
-        if (!key_att[9] && key_att[0] == '\x08' && command_pos >= 1){
+        if (trans_key.char1 == '\x08' && !trans_key.released){
             command_pos -= 1;
             unsigned int len = length(full_command);
             full_command[len-1] = '\0';
@@ -48,15 +69,14 @@ void prompt(unsigned int *position){
             print_char(0, 0xF0, position);
             continue;
         }
-        if (!key_att[9] && key_att[8]){
-            *(full_command + command_pos) = key_att[0];
+        if (!trans_key.released && trans_key.char1 != 0){
+            *(full_command + command_pos) = trans_key.char1;
             command_pos += 1;
-            *position = prompt_pos;
-            *(full_command + command_pos) = '\0';
+            *(position) = prompt_pos;
+            *(full_command + command_pos) = 0;
             print_string(full_command, 0x0F, position);
             print_char(0, 0xF0, position);
             continue;
         }
     }
-
 }

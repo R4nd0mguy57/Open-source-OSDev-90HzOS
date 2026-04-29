@@ -9,7 +9,7 @@
         }   while (*(target+index) != '\0');
         *(string+index) = '\0';
     }
-
+    
     int length(volatile char* string){
         int length = 0;
         for (unsigned int i=0; *(string+i)!='\0'; ++i){

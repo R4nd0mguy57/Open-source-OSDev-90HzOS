@@ -10,7 +10,11 @@ _start:
     call clear_screen
     mov esi, end_string
     call print_string
-    hlt
+
+    sti
+    hang:
+        hlt         ; Set CPU as idle
+        jmp hang    ; infinite loop for no triple fault
 
 print_string:
     cmp byte [esi], 0
@@ -29,4 +33,4 @@ return:
     mov eax, 0
     ret
 
-end_string: db "The Kernel stopped running.Your CPU has been stopped. It's now safe to turn off your computer!", 0
+end_string: db "The Kernel stopped running. Your CPU has been halted. It's now safe to turn off your computer!", 0

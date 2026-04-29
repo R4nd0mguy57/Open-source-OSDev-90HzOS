@@ -1,5 +1,6 @@
 [BITS 32]
 
+global extended
 global Scan_code
 global Ctrl_pressed
 global LeftShiftPressed
@@ -9,6 +10,7 @@ global Alt_pressed
 global Ctrl_combine
 global combine_idx
 
+extended: db 0
 combine_idx: db 0
 Ctrl_combine: times 6 db 0
 Alt_pressed: db 0
@@ -17,7 +19,6 @@ RightShiftPressed: db 0
 LeftShiftPressed: db 0
 Scan_code: db 0
 Ctrl_pressed: db 0
-Debug_adr: equ 0x10000           ; REMOVE TS LATER!! && * | Use ts as debug in qemu by typing xp /32bx 0x10000 to know which key is pressed 
 extern handle_kb
 
 global inb
@@ -39,8 +40,9 @@ kb_handler:
     pushad                  ; Save registers
     cld
     call handle_kb          ; do not edit ts line and the one line below or just do not edit eax
+    cmp al, 0
+    je kb_handler_end
     mov [Scan_code], al
-    mov [Debug_adr], al     ; [*] TS TOO!!
     cmp [Scan_code], 0x1D
     je ctr_pressed
     cmp [Scan_code], 0x9D
@@ -82,11 +84,11 @@ LeftShift_released:
     jmp kb_handler_end
 
 RightShift_pressed:
-    mov [LeftShiftPressed], 1
+    mov [RightShiftPressed], 1
     jmp kb_handler_end
 
 RightShift_released:
-    mov [LeftShiftPressed], 0
+    mov [RightShiftPressed], 0
     jmp kb_handler_end
 
 toogle_capslock:
