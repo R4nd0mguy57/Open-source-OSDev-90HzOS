@@ -22,10 +22,7 @@ void main(){
     print_string("Source code: https://github.com/R4nd0mguy57/Open-source-OSDev-90HzOS/tree/main\n", 0x1F, &position);
 
     next_entry(0, &position);
-    while (1){
-
-    }
-    return ;
+    return;
 }
 
 int extended_key;
