@@ -33,8 +33,8 @@
 
     void print_char(const char displayed_char, const char attributes, unsigned int *position){
         if (*position == 80*25){
-            move_grid(1);
             *(position) -= 80;
+            move_grid(1);
         }
         if (displayed_char != '\n' && displayed_char != '\t'){
             *((unsigned char*)VRAM_CHAR_ADR+(*position*2)) = displayed_char;

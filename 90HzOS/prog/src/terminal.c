@@ -8,7 +8,7 @@ void next_entry(int clear, unsigned int *position){
     if (clear >= 1){
         clear_screen();
     }
-    print_string("--------------------------------------------------------------------------------Executed Prog", 0x0F, position);
+    print_string("--------------------------------------------------------------------------------Executed Terminal", 0x0F, position);
 
     prompt(position);
 }
@@ -49,8 +49,13 @@ void prompt(unsigned int *position){
                     key = get_key();
                     trans_key = transkey(key);
                 }
-                --*(position);
-                print_char(0, 0x0F, position);
+                if (command_pos == 0){
+                    print_char(0, 0x0F, position);
+                }
+                else {
+                    --*(position);
+                    print_char(0, 0x0F, position);
+                }
                 prompt(position);
                 return;
             }
