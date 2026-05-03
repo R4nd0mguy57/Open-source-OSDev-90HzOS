@@ -82,6 +82,7 @@ start:
 halt:
     call Print_string16
     hlt
+    jmp $                   ; Infinite loop for no crashes
 
 GDT_Start:
     NULL_Descriptor:
