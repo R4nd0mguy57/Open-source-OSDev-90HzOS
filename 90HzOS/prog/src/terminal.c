@@ -30,7 +30,6 @@ void prompt(unsigned int *position){
     print_string("\n[90HzOS@krnl]$ ", 0x0F, position);
     print_char(0, 0xF0, position);
     --*(position);
-    extern volatile unsigned int Times_Grid_moved;
     struct output trans_key;
     unsigned char key=0;
     unsigned Oldkey = key;
