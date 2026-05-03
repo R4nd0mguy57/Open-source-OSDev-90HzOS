@@ -68,6 +68,9 @@ void prompt(unsigned int *position){
         }
         if (trans_key.char1 == '\x08' && !trans_key.released){
             unsigned int len = length(full_command);
+            if (len == 0){
+                continue;
+            }
             command_pos -= 1;
             full_command[len-1] = '\0';
             --*position;
