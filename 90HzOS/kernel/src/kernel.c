@@ -4,10 +4,12 @@
 #include "include/drivers/ports/ports.h"
 #include "../../prog/src/include/terminal.h"
 
+void extra_pos(unsigned int* extrapos);
+
 void main(){
     unsigned int position = 0;
     char string[] = "Booted into main function of kernel.c at 0x100000!\n";
-    clear_screen();
+    clear_screen(&position);
     print_string(string, 0x06, &position);
     init_idt();
     kb_init();

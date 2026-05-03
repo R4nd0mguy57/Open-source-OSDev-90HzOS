@@ -9,7 +9,7 @@
     #define VGA_SCREEN_WIDTH 80
     #define VGA_SCREEN_HEIGHT 25
     
-void clear_screen();
+void clear_screen(unsigned int* position);
 void print_char(const char displayed_char, const char attributes, unsigned int *position);
 void print_string(const char *string, const char attributes, unsigned int *position);
 void set_BGcolor(const char color);

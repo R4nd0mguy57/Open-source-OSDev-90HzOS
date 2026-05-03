@@ -9,18 +9,17 @@
         *((unsigned char*)VRAM_ATT_ADR+(*position*2)) = color;
     }
     
-    void clear_screen(){
+    void clear_screen(unsigned int* position){
         for (unsigned int i=0; i<(VGA_SCREEN_WIDTH*VGA_SCREEN_HEIGHT); ++i){
             *((unsigned char*)VRAM_CHAR_ADR+(i*2)) = 0;
             *((unsigned char*)VRAM_ATT_ADR+(i*2)) = 0x0F;
         }
+        *position = 0;
     }
-    
-
 
     void move_grid(unsigned int count){
         for (unsigned int i=0; i!=count; ++i){
-            for (unsigned int j=0; j!=80*(25-1); ++j){
+            for (unsigned int j=0; j!=80*25; ++j){
                 *((unsigned char*)VRAM_CHAR_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_CHAR+(j*2));
                 *((unsigned char*)VRAM_ATT_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_ATT+(j*2));
             }
@@ -32,13 +31,14 @@
     }
 
     void print_char(const char displayed_char, const char attributes, unsigned int *position){
-        if (*position == 80*25){
-            *(position) -= 80;
+        extern volatile unsigned int Times_Grid_moved;
+        if (*position-(Times_Grid_moved*80) >= (80*25-1)){
             move_grid(1);
+            Times_Grid_moved += 1;
         }
         if (displayed_char != '\n' && displayed_char != '\t'){
-            *((unsigned char*)VRAM_CHAR_ADR+(*position*2)) = displayed_char;
-            *((unsigned char*)VRAM_ATT_ADR+(*position*2)) = attributes;
+            *((unsigned char*)VRAM_CHAR_ADR+((*position-(Times_Grid_moved*80))*2)) = displayed_char;
+            *((unsigned char*)VRAM_ATT_ADR+((*position-(Times_Grid_moved*80))*2)) = attributes;
             ++(*position);
             return;
         }

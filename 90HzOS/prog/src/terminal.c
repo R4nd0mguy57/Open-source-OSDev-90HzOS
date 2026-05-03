@@ -6,7 +6,7 @@
 void next_entry(int clear, unsigned int *position){
     init_keys();
     if (clear >= 1){
-        clear_screen();
+        clear_screen(position);
     }
     print_string("--------------------------------------------------------------------------------Executed Terminal", 0x0F, position);
 
@@ -27,9 +27,10 @@ void next_entry(int clear, unsigned int *position){
     };*/
 
 void prompt(unsigned int *position){
-    print_string("\n[90HzOS]$ ", 0x0F, position);
+    print_string("\n[90HzOS@krnl]$ ", 0x0F, position);
     print_char(0, 0xF0, position);
     --*(position);
+    extern volatile unsigned int Times_Grid_moved;
     struct output trans_key;
     unsigned char key=0;
     unsigned Oldkey = key;
@@ -64,8 +65,8 @@ void prompt(unsigned int *position){
             }
         }
         if (trans_key.char1 == '\x08' && !trans_key.released){
-            command_pos -= 1;
             unsigned int len = length(full_command);
+            command_pos -= 1;
             full_command[len-1] = '\0';
             --*position;
             print_char(0, 0x00, position);
