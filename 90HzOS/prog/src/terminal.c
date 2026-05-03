@@ -64,6 +64,9 @@ void prompt(unsigned int *position){
                 continue;
             }
         }
+        if (trans_key.Ctrlpressed && trans_key.char1 == 'q'){
+            return;
+        }
         if (trans_key.char1 == '\x08' && !trans_key.released){
             unsigned int len = length(full_command);
             command_pos -= 1;

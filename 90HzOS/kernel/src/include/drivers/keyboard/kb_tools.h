@@ -45,6 +45,9 @@
                 output.released = 1;
                 return output;
             }
+            else {
+                output.Ctrlpressed = 0;
+            }
 
             if (Alt_pressed && key == 0x38){
                 if (!Ctrl_pressed){
