@@ -5,27 +5,29 @@ _start:
     jmp short start
     nop
 
-times 8 db 0                    ; label
-bpb_bytes_per_sector: dw 512
-bpb_sectors_per_cluster: db 1
-bpb_reserved_sectors_count: dw 1
-bpb_fats_count: db 2
-bpb_root_dir_entries_count: dw 224
-dw 2880                         ; sectors count
-db 0xF0                         ; media descriptor
-bpb_sectors_per_fat: dw 9
-bpb_sectors_per_track: dw 18
-bpb_heads_count: dw 2
-bpb_hidden_sectors: dd 0
-dd 0 ; large sectors
+; BPB BIOS PARAMETER BLOCK for strict BIOSs
 
-; EBR (Extended Boot Record)
-db 0x80                                 ; drive number
-db 0                                    ; unused
-db 0x29                                 ; boot signature
-dd 0x12345678                           ; serial number
-db "90HzOS     "                        ; volume label (11 bytes)
-ebr_file_system_type: db "FAT12   "     ; file system type (8 bytes)
+    times 8 db 0                    ; label
+    bpb_bytes_per_sector: dw 512
+    bpb_sectors_per_cluster: db 1
+    bpb_reserved_sectors_count: dw 1
+    bpb_fats_count: db 2
+    bpb_root_dir_entries_count: dw 224
+    dw 2880                         ; sectors count
+    db 0xF0                         ; media descriptor
+    bpb_sectors_per_fat: dw 9
+    bpb_sectors_per_track: dw 18
+    bpb_heads_count: dw 2
+    bpb_hidden_sectors: dd 0
+    dd 0 ; large sectors
+
+    ; EBR (Extended Boot Record)
+    db 0x80                                 ; drive number
+    db 0                                    ; unused
+    db 0x29                                 ; boot signature
+    dd 0x12345678                           ; serial number
+    db "90HzOS     "                        ; volume label (11 bytes)
+    ebr_file_system_type: db "FAT12   "     ; file system type (8 bytes)
 
 CODE_SEG equ 0x8
 DATA_SEG equ 0x10
