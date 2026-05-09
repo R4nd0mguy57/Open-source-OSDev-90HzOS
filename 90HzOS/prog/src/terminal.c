@@ -3,14 +3,15 @@
 #include "../../kernel/src/include/kernel.h"
 #include "../../kernel/src/include/drivers/keyboard/kb_tools.h"
 
-void next_entry(int clear, unsigned int *position){
+void next_entry(int clear){
+    extern volatile unsigned int position;
     init_keys();
     if (clear >= 1){
-        clear_screen(position);
+        clear_screen(&position);
     }
-    print_string("--------------------------------------------------------------------------------Executed Terminal", 0x0F, position);
+    print_string("--------------------------------------------------------------------------------Executed Terminal", 0x0F, &position);
 
-    prompt(position);
+    prompt(&position);
 }
 
 /*struct output {
@@ -26,7 +27,7 @@ void next_entry(int clear, unsigned int *position){
         unsigned char released;
     };*/
 
-void prompt(unsigned int *position){
+void prompt(volatile unsigned int *position){
     print_string("\n[90HzOS@krnl]$ ", 0x0F, position);
     print_char(0, 0xF0, position);
     --*(position);
@@ -80,7 +81,7 @@ void prompt(unsigned int *position){
             print_char(0, 0xF0, position);
             continue;
         }
-        if (!trans_key.released && trans_key.char1 != 0){
+        if (!trans_key.released && trans_key.char1 != 0 && !trans_key.extended){
             *(full_command + command_pos) = trans_key.char1;
             command_pos += 1;
             *(position) = prompt_pos;

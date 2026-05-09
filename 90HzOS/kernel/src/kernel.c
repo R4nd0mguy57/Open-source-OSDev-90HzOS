@@ -7,8 +7,10 @@
 void extra_pos(unsigned int* extrapos);
 
 void main(){
-    unsigned int position = 0;
-    char string[] = "Booted into main function of kernel.c at 0x100000!\n";
+    extern volatile unsigned int position;
+    unsigned int caca = 151515;
+    position = 0;
+    char string[] = "Booted into kernel entry at 0x100000!\n";
     clear_screen(&position);
     print_string(string, 0x06, &position);
     init_idt();
@@ -23,7 +25,7 @@ void main(){
 
     print_string("Source code: https://github.com/R4nd0mguy57/Open-source-OSDev-90HzOS/tree/main\n", 0x1F, &position);
 
-    next_entry(0, &position);
+    next_entry(0);
     return;
 }
 

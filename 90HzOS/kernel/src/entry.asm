@@ -5,6 +5,7 @@ extern main
 extern clear_screen
 
 _start:
+    
     call main
     mov ecx, 0
     call clear_screen
