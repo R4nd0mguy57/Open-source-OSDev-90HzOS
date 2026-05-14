@@ -97,7 +97,7 @@ void prompt(volatile unsigned int *position){
 }
 
 void parse(volatile unsigned int* position, const char* full_command){
-    extern volatile char command[];
+    char command[256];
     command[0] = 0;
     unsigned int com_idx = 0;
     while (com_idx != length(full_command) && *(full_command + com_idx) != ' '){

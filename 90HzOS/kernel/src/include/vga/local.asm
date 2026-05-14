@@ -9,9 +9,6 @@ global End_menu_pos
 global Times_Grid_moved
 global position
 global Color
-global command
-
-command equ 0x10000
 position: dd 0
 Begin_menu_pos: dd 0,0
 End_menu_pos: dd 0,0
