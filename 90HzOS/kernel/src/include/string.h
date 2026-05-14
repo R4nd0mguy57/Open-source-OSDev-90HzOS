@@ -1,7 +1,7 @@
 #ifndef STRING_H
     #define STRING_H
 
-    void replace_string(char *string, volatile char *target){
+    void replace_string(volatile char *string, volatile char *target){
         unsigned int index=0;
         do {
             *(string+index) = *(target+index);
@@ -10,7 +10,7 @@
         *(string+index) = '\0';
     }
     
-    int length(volatile char* string){
+    unsigned int length(volatile const char* string){
         int length = 0;
         for (unsigned int i=0; *(string+i)!='\0'; ++i){
             length += 1;
@@ -18,7 +18,7 @@
         return length;
     }
 
-    int compare_string(char* string1, char* string2){
+    int compare_string(volatile const char* string1, volatile const char* string2){
         unsigned int len1 = length(string1);
         unsigned int len2 = length(string2);
         if (len1 != len2){

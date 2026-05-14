@@ -27,6 +27,8 @@ void next_entry(int clear){
         unsigned char released;
     };*/
 
+char* command_args[256];
+
 void prompt(volatile unsigned int *position){
     print_string("\n[90HzOS@krnl]$ ", 0x0F, position);
     print_char(0, 0xF0, position);
@@ -51,12 +53,13 @@ void prompt(volatile unsigned int *position){
                     trans_key = transkey(key);
                 }
                 if (command_pos == 0){
-                    print_char(0, 0x0F, position);
+                    print_char(0, 0x00, position);
                 }
                 else {
                     --*(position);
                     print_char(0, 0x0F, position);
                 }
+                parse(position, full_command);
                 prompt(position);
                 return;
             }
@@ -90,5 +93,29 @@ void prompt(volatile unsigned int *position){
             print_char(0, 0xF0, position);
             continue;
         }
+    }
+}
+
+void parse(volatile unsigned int* position, const char* full_command){
+    extern volatile char command[];
+    command[0] = 0;
+    unsigned int com_idx = 0;
+    while (com_idx != length(full_command) && *(full_command + com_idx) != ' '){
+        *(command + com_idx) = *(full_command + com_idx);
+        ++com_idx;
+    }
+    *(command + com_idx) = 0;
+
+    if (compare_string(command, "\0")){
+        return;
+    }
+    else if (compare_string(command, "clear")){
+        clear_screen(position);
+        return;
+    }
+    else {
+        print_string("\nUnknown command: ", 0x0F, position);
+        print_string(command, 0x04, position);
+        return;
     }
 }

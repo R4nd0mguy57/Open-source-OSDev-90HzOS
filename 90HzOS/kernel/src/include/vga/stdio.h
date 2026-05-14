@@ -33,7 +33,7 @@
         }
     }
 
-    void print_char(const char displayed_char, const char attributes, volatile unsigned int *position){
+    void print_char(volatile const char displayed_char, const char attributes, volatile unsigned int *position){
         extern volatile unsigned int Times_Grid_moved;
         if (*position-(Times_Grid_moved*80) >= (80*25-1)){
             move_grid(1);
@@ -60,7 +60,7 @@
         }
     }
 
-    void print_string(const char *string, const char attributes, volatile unsigned int *position){
+    void print_string(volatile const char *string, const char attributes, volatile unsigned int *position){
         for (int i=0; *(string+i)!='\0'; ++i){
             print_char(*(string+i), attributes, position);
         }

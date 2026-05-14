@@ -8,7 +8,6 @@ void extra_pos(unsigned int* extrapos);
 
 void main(){
     extern volatile unsigned int position;
-    unsigned int caca = 151515;
     position = 0;
     char string[] = "Booted into kernel entry at 0x100000!\n";
     clear_screen(&position);
