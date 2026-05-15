@@ -14,5 +14,3 @@ Begin_menu_pos: dd 0,0
 End_menu_pos: dd 0,0
 Times_Grid_moved: dd 0
 Color: db 0x0F
-
-
