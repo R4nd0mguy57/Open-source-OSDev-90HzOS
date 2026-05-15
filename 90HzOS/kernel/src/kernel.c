@@ -11,13 +11,13 @@ void main(){
     position = 0;
     char string[] = "Booted into kernel entry at 0x100000!\n";
     clear_screen(&position);
-    print_string(string, 0x06, &position);
+    printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s", string);
     init_idt();
     kb_init();
     enable_int();
 
     replace_string(string, "Initialized keyboard.\n");
-    print_string(string, 0x0F, &position);
+    printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s", string);
 
     replace_string(string, "Hello From 90HzOS!\n");
     print_string(string, 0x4F, &position);

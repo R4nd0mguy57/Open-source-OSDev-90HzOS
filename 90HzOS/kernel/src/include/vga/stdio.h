@@ -21,15 +21,21 @@
     }
 
     void move_grid(unsigned int count){
-        for (unsigned int i=0; i!=count; ++i){
-            for (unsigned int j=0; j!=80*25; ++j){
-                *((unsigned char*)VRAM_CHAR_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_CHAR+(j*2));
-                *((unsigned char*)VRAM_ATT_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_ATT+(j*2));
+        if (count < 80){
+            for (unsigned int i=0; i!=count; ++i){
+                for (unsigned int j=0; j!=80*25; ++j){
+                    *((unsigned char*)VRAM_CHAR_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_CHAR+(j*2));
+                    *((unsigned char*)VRAM_ATT_ADR+(j*2)) = *((unsigned char*)MOVE_GRID_BEGIN_ATT+(j*2));
+                }
+            }
+            for (unsigned int i=0; i!=25; ++i){
+                *((unsigned char*)MOVE_GRID_END+(i*2)) = 0;
+                *((unsigned char*)MOVE_GRID_END+1+(i*2)) = 0;
             }
         }
-        for (unsigned int i=0; i!=25; ++i){
-            *((unsigned char*)MOVE_GRID_END+(i*2)) = 0;
-            *((unsigned char*)MOVE_GRID_END+1+(i*2)) = 0;
+        else {
+            extern volatile unsigned int position;
+            clear_screen(&position);
         }
     }
 
@@ -60,8 +66,8 @@
         }
     }
 
-    void print_string(volatile const char *string, const char attributes, volatile unsigned int *position){
-        for (int i=0; *(string+i)!='\0'; ++i){
+    void print_string(volatile const char* string, const char attributes, volatile unsigned int *position){
+        for (unsigned int i=0; *(string+i)!='\0'; ++i){
             print_char(*(string+i), attributes, position);
         }
     }
@@ -75,18 +81,27 @@
     void printf(const char* string, ...){
         extern volatile unsigned int position;
         extern volatile unsigned char Color;
-        int* var_arg_ptr = (int*)(&string);                       // 4 bytes per inc
+        int** var_arg_ptr_ptr = (int**)(&string);       // very inspired name tho
+        int* var_arg_ptr = (int*)(&string);             // 4 bytes per increase (stack aligned)
         for (int i = 0; *(string + i) != 0; ++i){
             if (*(string + i) != '%' && *(string + i) != '\033'){
                 print_char(*(string + i), Color, &position);
             }
             else if(*(string + i) == '\033'){
                 ++i;
-                Color = *(string + i);
+                switch (*(string + i)){
+                    case 'c':
+                        clear_screen(&position);
+                        break;
+                    default:
+                        Color = *(string + i);
+                        break;
+                }
                 continue;
             }
             else {
                 ++var_arg_ptr;
+                ++var_arg_ptr_ptr;
                 ++i;
                 switch (*(string + i)){
                     case 'd':case 'i':
@@ -97,6 +112,20 @@
                         break;
                     case 'c':
                         print_char(*var_arg_ptr, Color, &position);
+                        break;
+                    case 's':
+                        char stringf[8192];
+                        unsigned int str_idx = 0;
+                        unsigned int charf;
+                        charf = **(var_arg_ptr_ptr);
+                        while (charf != 0 && str_idx < 8192){
+                            charf = **(var_arg_ptr_ptr);
+                            *(stringf + str_idx) = charf;
+                            ++*(var_arg_ptr);
+                            ++str_idx;
+                        }
+                        *(stringf + str_idx) = 0;
+                        print_string(stringf, Color, &position); 
                         break;
                     default:
                         return;
