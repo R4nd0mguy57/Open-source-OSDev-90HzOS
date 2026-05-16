@@ -1,6 +1,6 @@
 #include "include/terminal.h"
-#include "../../kernel/src/include/string.h"
 #include "../../kernel/src/include/kernel.h"
+#include "../../kernel/src/include/string.h"
 #include "../../kernel/src/include/drivers/keyboard/kb_tools.h"
 
 void next_entry(int clear){

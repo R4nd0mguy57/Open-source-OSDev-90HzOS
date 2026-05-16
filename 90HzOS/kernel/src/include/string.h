@@ -1,6 +1,20 @@
 #ifndef STRING_H
     #define STRING_H
 
+    void reverse_string(char* string);
+    void replace_string(volatile char *string, volatile char* target);
+    unsigned int length(volatile const char* string);
+    int compare_string(volatile const char* string1, volatile const char* string2);
+
+    void reverse_string(char* string){
+        char* string_cpy = 0;
+        unsigned int str_len = length(string);
+        replace_string(string_cpy, string);
+        for (unsigned int i = 0; i != str_len; ++i){
+            *(string + i) = *(string_cpy + str_len - 1);
+        }
+    }
+
     void replace_string(volatile char *string, volatile char *target){
         unsigned int index=0;
         do {
@@ -35,5 +49,6 @@
         return 1;
 
     }
+
 
 #endif

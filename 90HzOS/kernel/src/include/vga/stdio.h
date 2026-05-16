@@ -7,6 +7,7 @@
 
     void print_integer(int integer, volatile unsigned int* position);
     void print_uinteger(unsigned int uinteger, volatile unsigned int* position);
+    void print_hex(const unsigned int* ptr, volatile unsigned int* position);
 
     void change_color(const char color, volatile unsigned int *position){
         *((unsigned char*)VRAM_ATT_ADR+(*position*2)) = color;
@@ -127,6 +128,10 @@
                         *(stringf + str_idx) = 0;
                         print_string(stringf, Color, &position); 
                         break;
+                    case 'p':
+                        const unsigned int* int_ptr = (unsigned int*)*(var_arg_ptr);
+                        print_hex(int_ptr, &position);
+                        break;
                     default:
                         return;
                 }
@@ -138,45 +143,28 @@
     void print_integer(int integer, volatile unsigned int* position){
         extern volatile unsigned char Color;
         char int_string[11];
-        unsigned int integer_str_len = 1;
-        int integer_copy = integer;
+        char unit;
         unsigned char int_to_char = 0;
-        int extreme_values = 10;
-        unsigned int sub_integer = 0;
-        unsigned int extreme_values_cp = 10;
-        int integers_string[11];
-
-        while (integer_copy >= extreme_values || integer_copy <= (extreme_values * -1)){
-            integer_copy /= 10;
-            integer_str_len += 1;
-        }
+        unsigned int integer_len = 0;
 
         if (integer < 0){
             print_char('-', Color, position);
+            integer *= -1;
         }
 
-        for (unsigned int i = 0; i != integer_str_len; ++i){
-            integer_copy = integer;
-            if (integer_copy < 0){
-                integer_copy *= -1;
-            }
+        int integer_copy = integer;
 
-            while (integer_copy >= extreme_values && integer_copy >= (extreme_values * -1)){
-                integer_copy /= 10;
-            }
+        for (unsigned int i = 0; integer_copy >= 10; ++i){
+            integer_copy /= 10;
+            integer_len++;
+        }
+        *(int_string + integer_len) = 0;
 
-            if (i != 0){
-                extreme_values_cp = extreme_values;
-                sub_integer = 0;
-                for (unsigned j = 0; j != i; ++j){
-                    extreme_values_cp /= 10;
-                    sub_integer += (extreme_values_cp) * (*(integers_string + j));
-                }
-                integer_copy -= sub_integer;
-            }
-            *(integers_string + i) = integer_copy;
+        for (unsigned int i = 0; integer >= 1; ++i){
+            unit = integer % 10;
+            integer /= 10;
 
-            switch (integer_copy){
+            switch (unit){
                 case 0:
                     int_to_char = 48;
                     break;
@@ -211,48 +199,31 @@
                     int_to_char = 0;
                     break;
             }
-            extreme_values *= 10;
-            *(int_string + i) = int_to_char;
+            *(int_string + integer_len - i) = int_to_char;
         }
-        *(int_string + integer_str_len) = 0;
         print_string(int_string, Color, position);
     }
 
     void print_uinteger(unsigned int uinteger, volatile unsigned int* position){
         extern volatile unsigned char Color;
         char uint_string[11];
-        unsigned int uinteger_str_len = 1;
-        unsigned int uinteger_copy = uinteger;
         unsigned char uint_to_char = 0;
-        unsigned int extreme_values = 10;
-        unsigned int sub_uinteger = 0;
-        unsigned int extreme_values_cp = 10;
-        unsigned int integers_string[11];
+        unsigned char unit;
+        unsigned int uinteger_len = 0;
 
-        while (uinteger_copy >= extreme_values){
+        unsigned int uinteger_copy = uinteger;
+
+        for (int i = 0; uinteger_copy >= 10; ++i){
             uinteger_copy /= 10;
-            uinteger_str_len += 1;
+            uinteger_len++;
         }
+        *(uint_string + uinteger_len) = 0;
 
-        for (unsigned int i = 0; i != uinteger_str_len; ++i){
-            uinteger_copy = uinteger;
+        for (unsigned int i = 0; uinteger >= 1; ++i){
+            unit = uinteger % 10;
+            uinteger /= 10;
 
-            while (uinteger_copy >= extreme_values){
-                uinteger_copy /= 10;
-            }
-
-            if (i != 0){
-                extreme_values_cp = extreme_values;
-                sub_uinteger = 0;
-                for (unsigned j = 0; j != i; ++j){
-                    extreme_values_cp /= 10;
-                    sub_uinteger += (extreme_values_cp) * (*(integers_string + j));
-                }
-                uinteger_copy -= sub_uinteger;
-            }
-            *(integers_string + i) = uinteger_copy;
-
-            switch (uinteger_copy){
+            switch (unit){
                 case 0:
                     uint_to_char = 48;
                     break;
@@ -287,11 +258,89 @@
                     uint_to_char = 0;
                     break;
             }
-            extreme_values *= 10;
-            *(uint_string + i) = uint_to_char;
+            *(uint_string + uinteger_len - i) = uint_to_char;
         }
-        *(uint_string + uinteger_str_len) = 0;
         print_string(uint_string, Color, position);
+    }
+
+    void print_hex(const unsigned int* ptr, volatile unsigned int* position){
+        unsigned int conv_ptr = (unsigned int)ptr;
+        extern volatile unsigned char Color;
+        char ptr_string[11];
+        unsigned char uptr_to_char = 0;
+        unsigned char unithex;
+        unsigned int hex_len = 0;
+        unsigned int conv_ptr_copy = conv_ptr;
+
+        for (unsigned int i; conv_ptr_copy >= 16; ++i){
+            conv_ptr_copy /= 16;
+            ++hex_len;
+        }
+        *(ptr_string + hex_len) = 0;
+
+        print_string("0x", Color, position);
+
+        for (unsigned int i = 0; conv_ptr >= 1; ++i){
+            unithex = conv_ptr % 16;
+            conv_ptr /= 16;
+
+            switch (unithex){
+                case 0:
+                    uptr_to_char = 48;
+                    break;
+                case 1:
+                    uptr_to_char = 49;
+                    break;
+                case 2:
+                    uptr_to_char = 50;
+                    break;
+                case 3:
+                    uptr_to_char = 51;
+                    break;
+                case 4:
+                    uptr_to_char = 52;
+                    break;
+                case 5:
+                    uptr_to_char = 53;
+                    break;
+                case 6:
+                    uptr_to_char = 54;
+                    break;
+                case 7:
+                    uptr_to_char = 55;
+                    break;
+                case 8:
+                    uptr_to_char = 56;
+                    break;
+                case 9:
+                    uptr_to_char = 57;
+                    break;
+                case 0x0A:
+                    uptr_to_char = 65;
+                    break;
+                case 0x0B:
+                    uptr_to_char = 66;
+                    break;
+                case 0x0C:
+                    uptr_to_char = 67;
+                    break;
+                case 0x0D:
+                    uptr_to_char = 68;
+                    break;
+                case 0x0E:
+                    uptr_to_char = 69;
+                    break;
+                case 0x0F:
+                    uptr_to_char = 70;
+                    break;
+                default:
+                    uptr_to_char = 0;
+                    break;
+            }
+            *(ptr_string + hex_len - i) = uptr_to_char;
+        }
+        print_string(ptr_string, Color, position);
+
     }
 
 #endif

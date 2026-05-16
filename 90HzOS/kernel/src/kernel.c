@@ -4,14 +4,16 @@
 #include "include/drivers/ports/ports.h"
 #include "../../prog/src/include/terminal.h"
 
-void extra_pos(unsigned int* extrapos);
+void init_func();
 
 void main(){
+    unsigned int* main_ptr = (unsigned int*)&main;
+    unsigned int main_pointer = (unsigned int)main_ptr;
     extern volatile unsigned int position;
     position = 0;
-    char string[] = "Booted into kernel entry at 0x100000!\n";
+    char string[] = "Booted into kernel entry at 0x100000!\n\t   In main C func in kernel:";
     clear_screen(&position);
-    printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s", string);
+    printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s\033\x06 %p\033\x00\n", string, main_pointer);
     init_idt();
     kb_init();
     enable_int();
@@ -52,3 +54,9 @@ unsigned char handle_kb(){
         return keycode;
     }
 }
+
+/*void init_func(){
+    extern volatile unsigned int position;
+    clear_screen(&position);
+
+}*/
