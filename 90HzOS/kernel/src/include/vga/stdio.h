@@ -272,7 +272,7 @@
         unsigned int hex_len = 0;
         unsigned int conv_ptr_copy = conv_ptr;
 
-        for (unsigned int i; conv_ptr_copy >= 16; ++i){
+        for (unsigned int i = 0; conv_ptr_copy >= 16; ++i){
             conv_ptr_copy /= 16;
             ++hex_len;
         }

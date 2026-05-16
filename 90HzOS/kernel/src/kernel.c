@@ -4,8 +4,6 @@
 #include "include/drivers/ports/ports.h"
 #include "../../prog/src/include/terminal.h"
 
-void init_func();
-
 void main(){
     unsigned int* main_ptr = (unsigned int*)&main;
     unsigned int main_pointer = (unsigned int)main_ptr;
@@ -54,9 +52,3 @@ unsigned char handle_kb(){
         return keycode;
     }
 }
-
-/*void init_func(){
-    extern volatile unsigned int position;
-    clear_screen(&position);
-
-}*/

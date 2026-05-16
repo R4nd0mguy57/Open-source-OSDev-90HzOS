@@ -63,7 +63,7 @@ start:
     mov ch, 0x00
     mov bx, Kernel_adr
     mov cl, 0x02
-    mov al, 0x10
+    mov al, 0x20
     mov [Sectors_load_nbr], al
     mov dl, [BOOT_DISK]
     int 0x13
