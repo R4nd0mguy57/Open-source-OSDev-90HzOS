@@ -13,5 +13,10 @@ all:
 	rm -f ~/OSDev/90HzOS/OS/90HzOS.bin
 	cat ~/OSDev/90HzOS/boot/bin/bootloader ~/OSDev/90HzOS/kernel/bin/full/kernel.bin > ~/OSDev/90HzOS/OS/90HzOS.bin
 	dd if=/dev/zero >> ~/OSDev/90HzOS/OS/90HzOS.bin count=32 bs=512
+
+floppy:
+	dd if=/dev/zero of=90HzOS/img/disk.img bs=1M count=16
+	dd if=90HzOS/OS/90HzOS.bin of=90HzOS/img/disk.img conv=notrunc
+
 run:
 	qemu-system-x86_64 -m 4096 -monitor stdio -hda ~/OSDev/90HzOS/OS/90HzOS.bin

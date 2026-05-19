@@ -39,10 +39,11 @@ enable_int:
 kb_handler:
     pushad                  ; Save registers
     cld
-    call handle_kb          ; do not edit ts line and the one line below or just do not edit eax
+    call handle_kb
+    mov [Scan_code], al
+
     cmp al, 0
     je kb_handler_end
-    mov [Scan_code], al
     cmp [Scan_code], 0x1D
     je ctr_pressed
     cmp [Scan_code], 0x9D
