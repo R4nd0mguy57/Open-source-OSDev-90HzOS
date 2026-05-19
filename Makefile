@@ -1,6 +1,7 @@
 CFLAGS= -Wall -Wextra -Iinclude
 
 all:
+	clear
 	mkdir -p ~/OSDev/90HzOS/kernel/src ~/OSDev/90HzOS/kernel/bin ~/OSDev/90HzOS/OS ~/OSDev/90HzOS/img ~/OSDev/90HzOS/boot/bin ~/OSDev/90HzOS/boot/src ~/OSDev/90HzOS/kernel/bin/full
 	nasm -f bin ~/OSDev/90HzOS/boot/src/boot.asm -o ~/OSDev/90HzOS/boot/bin/bootloader
 	nasm -f elf ~/OSDev/90HzOS/kernel/src/entry.asm -o ~/OSDev/90HzOS/kernel/bin/entry.o
@@ -15,6 +16,7 @@ all:
 	dd if=/dev/zero >> ~/OSDev/90HzOS/OS/90HzOS.bin count=32 bs=512
 
 floppy:
+	echo "--- MAKING FLOPPY DISK IMAGE ---"
 	dd if=/dev/zero of=90HzOS/img/disk.img bs=1M count=16
 	dd if=90HzOS/OS/90HzOS.bin of=90HzOS/img/disk.img conv=notrunc
 

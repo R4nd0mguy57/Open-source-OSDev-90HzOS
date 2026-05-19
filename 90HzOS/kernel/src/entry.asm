@@ -4,6 +4,9 @@ global _start
 extern main
 extern clear_screen
 
+global OSstatus
+OSstatus: db 1      ; 1 means ACTIVE, 2 means REBOOT the OS (not w/ motherboard), 0 means CPU idle ("shutdown")
+
 _start:
     
     call main
@@ -12,6 +15,14 @@ _start:
     mov esi, end_string
     call print_string
 
+    cmp [OSstatus], 0
+    je shutdown
+    cmp [OSstatus], 2
+    je _start
+    jmp $
+
+
+shutdown:
     sti
     hang:
         hlt         ; Set CPU as idle

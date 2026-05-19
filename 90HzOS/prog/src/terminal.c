@@ -45,7 +45,6 @@ void prompt(volatile unsigned int *position){
         if (key == Oldkey || key == 0){
             continue;
         }
-        ++test_idx;
         trans_key = transkey(key);
         if (trans_key.char1 == '\r' || trans_key.char1 == '\t'){
             if (trans_key.char1 == '\r' && !trans_key.released){
@@ -113,6 +112,9 @@ void parse(volatile unsigned int* position, const char* full_command){
     else if (compare_string(command, "clear")){
         clear_screen(position);
         return;
+    }
+    else if (compare_string(command, "rebootOS")){
+        clear_screen(position);
     }
     else {
         print_string("\nUnknown command: ", 0x0F, position);
