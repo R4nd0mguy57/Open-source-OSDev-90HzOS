@@ -59,8 +59,10 @@ void prompt(volatile unsigned int *position){
                     --*(position);
                     print_char(0, 0x0F, position);
                 }
-                parse(position, full_command);
-                prompt(position);
+                unsigned int rcode = parse(position, full_command);
+                if (rcode == 0){
+                    prompt(position);
+                }
                 return;
             }
             else {
@@ -96,9 +98,8 @@ void prompt(volatile unsigned int *position){
     }
 }
 
-void parse(volatile unsigned int* position, const char* full_command){
-    char command[256];
-    command[0] = 0;
+unsigned int parse(volatile unsigned int* position, const char* full_command){
+    char command[256] = "";
     unsigned int com_idx = 0;
     while (com_idx != length(full_command) && *(full_command + com_idx) != ' '){
         *(command + com_idx) = *(full_command + com_idx);
@@ -107,18 +108,21 @@ void parse(volatile unsigned int* position, const char* full_command){
     *(command + com_idx) = 0;
 
     if (compare_string(command, "\0")){
-        return;
+        return 0;
     }
     else if (compare_string(command, "clear")){
         clear_screen(position);
-        return;
+        return 0;
     }
     else if (compare_string(command, "rebootOS")){
         clear_screen(position);
+        extern volatile unsigned int end_status;
+        end_status = 2;
+        return 1;
     }
     else {
         print_string("\nUnknown command: ", 0x0F, position);
         print_string(command, 0x04, position);
-        return;
+        return 0;
     }
 }

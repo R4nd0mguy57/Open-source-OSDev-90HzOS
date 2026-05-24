@@ -20,5 +20,9 @@ floppy:
 	dd if=/dev/zero of=90HzOS/img/disk.img bs=1M count=16
 	dd if=90HzOS/OS/90HzOS.bin of=90HzOS/img/disk.img conv=notrunc
 
+convert_vdi_static:
+	rm -f ~/OSDev/90HzOS/vdi/90HzOS.vdi
+	VBoxManage convertdd ~/OSDev/90HzOS/img/disk.img ~/OSDev/90HzOS/vdi/90HzOS.vdi
+
 run:
 	qemu-system-x86_64 -m 4096 -monitor stdio -hda ~/OSDev/90HzOS/OS/90HzOS.bin

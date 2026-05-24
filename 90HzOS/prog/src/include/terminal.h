@@ -3,6 +3,6 @@
 
     void next_entry(int clear);
     void prompt(volatile unsigned int *position);
-    void parse(volatile unsigned int* position, const char* full_command);
+    unsigned int parse(volatile unsigned int* position, const char* full_command);
 
 #endif

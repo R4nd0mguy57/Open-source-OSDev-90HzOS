@@ -3,6 +3,10 @@ cross/
 *.dd
 *.img
 *.bin
+*.vdi
+img/
+OS/
+vdi/
 
 toolchain/
 opt/

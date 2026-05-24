@@ -4,13 +4,21 @@
 #include "include/drivers/ports/ports.h"
 #include "../../prog/src/include/terminal.h"
 
-void main(){
+
+int main(){
+    extern volatile unsigned int end_status;
+    end_status = 0;
     unsigned int* main_ptr = (unsigned int*)&main;
     unsigned int main_pointer = (unsigned int)main_ptr;
     extern volatile unsigned int position;
     position = 0;
     char string[] = "Booted into kernel entry at 0x100000!\n\t   In main C func in kernel:";
     clear_screen(&position);
+    //if (*((unsigned char*)0x10000) != 0){
+    char str[] = "";
+    str[0] = *((unsigned char*)0x10000);
+    printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s\n", str);
+    //}
     printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s\033\x06 %p\033\x00\n", string, main_pointer);
     init_idt();
     kb_init();
@@ -25,7 +33,7 @@ void main(){
     print_string("Source code: https://github.com/R4nd0mguy57/Open-source-OSDev-90HzOS/tree/main\n", 0x1F, &position);
 
     next_entry(0);
-    return;
+    return end_status;
 }
 
 int extended_key;

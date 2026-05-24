@@ -37,6 +37,8 @@ Kernel_Destination equ 0x100000
 BOOT_DISK: db 0
 LOAD_BYTES: dd 0
 
+RAMInfo_ASCII_Sign: equ "SMAP"      ; (== 0x50414D53)
+
 Sectors_load_nbr: db 0
 
 %define STACK_ADR 0x9000
@@ -130,6 +132,46 @@ Print_char16:
     jmp Print_string16
 return_str16:
     ret
+
+Get_RAM_Info:
+    mov ebx, 0
+    mov ecx, 0
+    RAMInfo_loop:
+        mov di, RAMInfo_Buffer
+        mov edx, RAMInfo_ASCII_Sign
+        mov eax, 0xE820
+        int 0x15
+        cmp ebx, 0
+        je RAM_Info_return
+        mov eax, [RAMInfo_Buffer.type]
+        cmp eax, 1
+        je Add_RAM_Info
+        jmp RAMInfo_loop
+    Add_RAM_Info:
+        mov eax, [RAMInfo_Buffer.base_low]
+        jmp Update_URAMBaseptr
+    Update_URAMBaseptr:
+        mov [Usable_RAMSpace_Baseptr + ecx], eax
+        jmp step2
+    RAM_Info_return:
+        ret
+    step2:
+        mov eax, [RAMInfo_Buffer.length_low]
+        mov [Usable_RAMSpace_length + ecx], eax
+        add ecx, 4
+        jmp RAMInfo_loop
+
+
+RAMInfo_Buffer:
+    .base_low:       dd 0
+    .base_high:      dd 0
+    .length_low:     dd 0
+    .length_high:    dd 0
+    .type:           dd 0
+RAMInfo_Buffer_End:
+
+Usable_RAMSpace_Baseptr:    db 0
+Usable_RAMSpace_length:     db 0
 
 Disk_Error: db "Disk Error!", 0
 
