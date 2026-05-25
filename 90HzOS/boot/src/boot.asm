@@ -78,6 +78,8 @@ start:
     or al, 2
     out 0x92, al
 
+    call Get_RAM_Info
+
     jmp Set_pm
 
 
