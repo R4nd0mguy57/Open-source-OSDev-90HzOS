@@ -5,30 +5,6 @@ _start:
     jmp short start
     nop
 
-; BPB BIOS PARAMETER BLOCK for strict BIOSs
-
-    times 8 db 0                    ; label
-    bpb_bytes_per_sector: dw 512
-    bpb_sectors_per_cluster: db 1
-    bpb_reserved_sectors_count: dw 1
-    bpb_fats_count: db 2
-    bpb_root_dir_entries_count: dw 224
-    dw 2880                         ; sectors count
-    db 0xF0                         ; media descriptor
-    bpb_sectors_per_fat: dw 9
-    bpb_sectors_per_track: dw 18
-    bpb_heads_count: dw 2
-    bpb_hidden_sectors: dd 0
-    dd 0 ; large sectors
-
-    ; EBR (Extended Boot Record)
-    db 0x80                                 ; drive number
-    db 0                                    ; unused
-    db 0x29                                 ; boot signature
-    dd 0x12345678                           ; serial number
-    db "90HzOS     "                        ; volume label (11 bytes)
-    ebr_file_system_type: db "FAT12   "     ; file system type (8 bytes)
-
 CODE_SEG equ 0x8
 DATA_SEG equ 0x10
 
@@ -37,7 +13,8 @@ Kernel_Destination equ 0x100000
 BOOT_DISK: db 0
 LOAD_BYTES: dd 0
 
-RAMInfo_ASCII_Sign: equ "SMAP"      ; (== 0x50414D53)
+Usable_RAMSpace_Baseptr equ 0x8000
+Usable_RAMSpace_length  equ 0x9000
 
 Sectors_load_nbr: db 0
 
@@ -137,14 +114,18 @@ return_str16:
 
 Get_RAM_Info:
     mov ebx, 0
-    mov ecx, 0
+    mov esi, 0
     RAMInfo_loop:
-        mov di, RAMInfo_Buffer
-        mov edx, RAMInfo_ASCII_Sign
-        mov eax, 0xE820
+        mov di, RAMInfo_Buffer      ; es:di
+        mov edx, 0x534D4150         ; Signature
+        mov eax, 0xE820             ; Mode
+        mov ecx, 0x14               ; Bytes we allow to the BIOS to write into
         int 0x15
+        jc RAM_Error
         cmp ebx, 0
         je RAM_Info_return
+        cmp eax, 0x534D4150
+        jne RAM_Error
         mov eax, [RAMInfo_Buffer.type]
         cmp eax, 1
         je Add_RAM_Info
@@ -153,16 +134,27 @@ Get_RAM_Info:
         mov eax, [RAMInfo_Buffer.base_low]
         jmp Update_URAMBaseptr
     Update_URAMBaseptr:
-        mov [Usable_RAMSpace_Baseptr + ecx], eax
-        jmp step2
-    RAM_Info_return:
-        ret
-    step2:
+        mov [Usable_RAMSpace_Baseptr + esi], eax
         mov eax, [RAMInfo_Buffer.length_low]
-        mov [Usable_RAMSpace_length + ecx], eax
-        add ecx, 4
+        mov [Usable_RAMSpace_length + esi], eax
+        add esi, 0x04
         jmp RAMInfo_loop
+    RAM_Info_return:
+        mov [Usable_RAMSpace_Baseptr + esi], 0
+        mov [Usable_RAMSpace_length + esi], 0
+        mov esi, 0
+        mov eax, 0
+        ret
 
+RAM_Error:
+    mov ah, 0x0E
+    mov si, RAM_ERRstr
+    call Print_string16
+    .Err_loop:
+        hlt
+        jmp RAM_Error.Err_loop
+
+RAM_ERRstr: db "RAM Err", 0
 
 RAMInfo_Buffer:
     .base_low:       dd 0
@@ -172,10 +164,8 @@ RAMInfo_Buffer:
     .type:           dd 0
 RAMInfo_Buffer_End:
 
-Usable_RAMSpace_Baseptr:    db 0
-Usable_RAMSpace_length:     db 0
 
-Disk_Error: db "Disk Error!", 0
+Disk_Error: db "Disk Err", 0
 
 [BITS 32]
 Protected_Mode:
@@ -236,7 +226,7 @@ Print_charPM:
 return_str:
     ret
 
-Loading_string: db "Loading Kernel...", 0
+Loading_string: db "Loading Kernel", 0
 
 times 510-($-$$) db 0
 dw 0xAA55

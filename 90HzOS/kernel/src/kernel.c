@@ -4,8 +4,15 @@
 #include "include/drivers/ports/ports.h"
 #include "../../prog/src/include/terminal.h"
 
-
 int main(){
+    unsigned int* Usable_RAMSpace_Baseptr = ((unsigned int*)0x10000);
+    unsigned int* Usable_RAMSpace_length  = ((unsigned int*)0x10014);
+    extern volatile unsigned int* test_;
+    for (unsigned int i = 0; *(Usable_RAMSpace_Baseptr + i) != 0; ++i){
+        *(test_ + i) = *(Usable_RAMSpace_Baseptr + i);
+        *(test_ + i + 1) = 0;
+    }
+
     extern volatile unsigned int end_status;
     end_status = 0;
     unsigned int* main_ptr = (unsigned int*)&main;
@@ -14,11 +21,6 @@ int main(){
     position = 0;
     char string[] = "Booted into kernel entry at 0x100000!\n\t   In main C func in kernel:";
     clear_screen(&position);
-    //if (*((unsigned char*)0x10000) != 0){
-    char str[] = "";
-    str[0] = *((unsigned char*)0x10000);
-    printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s\n", str);
-    //}
     printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s\033\x06 %p\033\x00\n", string, main_pointer);
     init_idt();
     kb_init();
