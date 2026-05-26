@@ -67,7 +67,7 @@
         }
     }
 
-    void print_string(volatile const char* string, const char attributes, volatile unsigned int *position){
+    void print_string(volatile const char* string, const char attributes, volatile unsigned int* position){
         for (unsigned int i=0; *(string+i)!='\0'; ++i){
             print_char(*(string+i), attributes, position);
         }
@@ -151,19 +151,59 @@
             print_char('-', Color, position);
             integer *= -1;
         }
+        if (integer != 0 && integer >= 10) {
 
-        int integer_copy = integer;
+            int integer_copy = integer;
 
-        for (unsigned int i = 0; integer_copy >= 10; ++i){
-            integer_copy /= 10;
-            integer_len++;
+            for (unsigned int i = 0; integer_copy >= 10; ++i){
+                integer_copy /= 10;
+                integer_len++;
+            }
+            *(int_string + integer_len) = 0;
+
+            for (unsigned int i = 0; integer >= 1; ++i){
+                unit = integer % 10;
+                integer /= 10;
+
+                switch (unit){
+                    case 0:
+                        int_to_char = 48;
+                        break;
+                    case 1:
+                        int_to_char = 49;
+                        break;
+                    case 2:
+                        int_to_char = 50;
+                        break;
+                    case 3:
+                        int_to_char = 51;
+                        break;
+                    case 4:
+                        int_to_char = 52;
+                        break;
+                    case 5:
+                        int_to_char = 53;
+                        break;
+                    case 6:
+                        int_to_char = 54;
+                        break;
+                    case 7:
+                        int_to_char = 55;
+                        break;
+                    case 8:
+                        int_to_char = 56;
+                        break;
+                    case 9:
+                        int_to_char = 57;
+                        break;
+                    default:
+                        int_to_char = 0;
+                        break;
+                }
+                *(int_string + integer_len - i) = int_to_char;
+            }
         }
-        *(int_string + integer_len) = 0;
-
-        for (unsigned int i = 0; integer >= 1; ++i){
-            unit = integer % 10;
-            integer /= 10;
-
+        else if (integer < 10){
             switch (unit){
                 case 0:
                     int_to_char = 48;
@@ -199,7 +239,12 @@
                     int_to_char = 0;
                     break;
             }
-            *(int_string + integer_len - i) = int_to_char;
+            *(int_string) = int_to_char;
+            *(int_string + 1) = 0;
+        }
+        else {
+            *(int_string) = 48;
+            *(int_string + 1) = 0;
         }
         print_string(int_string, Color, position);
     }
@@ -209,21 +254,63 @@
         char uint_string[11];
         unsigned char uint_to_char = 0;
         unsigned char unit;
-        unsigned int uinteger_len = 0;
+        unsigned int  uinteger_len = 0;
 
         unsigned int uinteger_copy = uinteger;
 
-        for (int i = 0; uinteger_copy >= 10; ++i){
-            uinteger_copy /= 10;
-            uinteger_len++;
+        if (uinteger != 0 && uinteger >= 10){
+
+            for (int i = 0; uinteger_copy >= 10; ++i){
+                uinteger_copy /= 10;
+                uinteger_len++;
+            }
+            *(uint_string + uinteger_len) = 0;
+
+            for (unsigned int i = 0; uinteger >= 1; ++i){
+                unit = uinteger % 10;
+
+                uinteger /= 10;
+
+                switch (unit){
+                    case 0:
+                        uint_to_char = 48;
+                        break;
+                    case 1:
+                        uint_to_char = 49;
+                        break;
+                    case 2:
+                        uint_to_char = 50;
+                        break;
+                    case 3:
+                        uint_to_char = 51;
+                        break;
+                    case 4:
+                        uint_to_char = 52;
+                        break;
+                    case 5:
+                        uint_to_char = 53;
+                        break;
+                    case 6:
+                        uint_to_char = 54;
+                        break;
+                    case 7:
+                        uint_to_char = 55;
+                        break;
+                    case 8:
+                        uint_to_char = 56;
+                        break;
+                    case 9:
+                        uint_to_char = 57;
+                        break;
+                    default:
+                        uint_to_char = 0;
+                        break;
+                }
+                *(uint_string + uinteger_len - i) = uint_to_char;
+            }
         }
-        *(uint_string + uinteger_len) = 0;
-
-        for (unsigned int i = 0; uinteger >= 1; ++i){
-            unit = uinteger % 10;
-            uinteger /= 10;
-
-            switch (unit){
+        else if(uinteger < 10){
+            switch (uinteger){
                 case 0:
                     uint_to_char = 48;
                     break;
@@ -257,8 +344,14 @@
                 default:
                     uint_to_char = 0;
                     break;
-            }
-            *(uint_string + uinteger_len - i) = uint_to_char;
+                }
+            *(uint_string) = uint_to_char;
+            *(uint_string + 1) = 0;
+
+        }
+        else {
+            *(uint_string) = 48;
+            *(uint_string + 1) = 0;
         }
         print_string(uint_string, Color, position);
     }
@@ -272,72 +365,88 @@
         unsigned int hex_len = 0;
         unsigned int conv_ptr_copy = conv_ptr;
 
-        for (unsigned int i = 0; conv_ptr_copy >= 16; ++i){
-            conv_ptr_copy /= 16;
-            ++hex_len;
-        }
-        *(ptr_string + hex_len) = 0;
-
         print_string("0x", Color, position);
 
-        for (unsigned int i = 0; conv_ptr >= 1; ++i){
-            unithex = conv_ptr % 16;
-            conv_ptr /= 16;
+        if (ptr != 0){
 
-            switch (unithex){
-                case 0:
-                    uptr_to_char = 48;
-                    break;
-                case 1:
-                    uptr_to_char = 49;
-                    break;
-                case 2:
-                    uptr_to_char = 50;
-                    break;
-                case 3:
-                    uptr_to_char = 51;
-                    break;
-                case 4:
-                    uptr_to_char = 52;
-                    break;
-                case 5:
-                    uptr_to_char = 53;
-                    break;
-                case 6:
-                    uptr_to_char = 54;
-                    break;
-                case 7:
-                    uptr_to_char = 55;
-                    break;
-                case 8:
-                    uptr_to_char = 56;
-                    break;
-                case 9:
-                    uptr_to_char = 57;
-                    break;
-                case 0x0A:
-                    uptr_to_char = 65;
-                    break;
-                case 0x0B:
-                    uptr_to_char = 66;
-                    break;
-                case 0x0C:
-                    uptr_to_char = 67;
-                    break;
-                case 0x0D:
-                    uptr_to_char = 68;
-                    break;
-                case 0x0E:
-                    uptr_to_char = 69;
-                    break;
-                case 0x0F:
-                    uptr_to_char = 70;
-                    break;
-                default:
-                    uptr_to_char = 0;
-                    break;
+            for (unsigned int i = 0; conv_ptr_copy >= 16; ++i){
+                conv_ptr_copy /= 16;
+                ++hex_len;
             }
-            *(ptr_string + hex_len - i) = uptr_to_char;
+            *(ptr_string + hex_len) = 0;
+
+            unsigned int index = 0;
+
+            for (unsigned int i = 0; conv_ptr >= 1; ++i){
+                unithex = conv_ptr % 16;
+                conv_ptr /= 16;
+
+                switch (unithex){
+                    case 0:
+                        uptr_to_char = 48;
+                        break;
+                    case 1:
+                        uptr_to_char = 49;
+                        break;
+                    case 2:
+                        uptr_to_char = 50;
+                        break;
+                    case 3:
+                        uptr_to_char = 51;
+                        break;
+                    case 4:
+                        uptr_to_char = 52;
+                        break;
+                    case 5:
+                        uptr_to_char = 53;
+                        break;
+                    case 6:
+                        uptr_to_char = 54;
+                        break;
+                    case 7:
+                        uptr_to_char = 55;
+                        break;
+                    case 8:
+                        uptr_to_char = 56;
+                        break;
+                    case 9:
+                        uptr_to_char = 57;
+                        break;
+                    case 0x0A:
+                        uptr_to_char = 65;
+                        break;
+                    case 0x0B:
+                        uptr_to_char = 66;
+                        break;
+                    case 0x0C:
+                        uptr_to_char = 67;
+                        break;
+                    case 0x0D:
+                        uptr_to_char = 68;
+                        break;
+                    case 0x0E:
+                        uptr_to_char = 69;
+                        break;
+                    case 0x0F:
+                        uptr_to_char = 70;
+                        break;
+                    default:
+                        uptr_to_char = 0;
+                        break;
+                ++index;
+                }
+                *(ptr_string + hex_len - i) = uptr_to_char;
+            }
+            for (unsigned int i = 0; 6-index-i-1 != 0; ++i){
+                *(ptr_string + index + i + 1) = 48;
+                *(ptr_string + index + i + 2) = 0;
+            }
+        }
+        else {
+            for (unsigned int i = 0; i != 6; ++i){
+                *(ptr_string + i) = 48;
+                *(ptr_string + i + 1) = 0;
+            }
         }
         print_string(ptr_string, Color, position);
 

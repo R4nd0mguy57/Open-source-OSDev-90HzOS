@@ -11,7 +11,6 @@ global position
 global Color
 global test_
 
-test_ equ 0x10000
 position: dd 0
 Begin_menu_pos: dd 0,0
 End_menu_pos: dd 0,0

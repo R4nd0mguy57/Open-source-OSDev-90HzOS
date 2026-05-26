@@ -1,26 +1,24 @@
+#define INCLUDE_FROM_KRNL
 #include "include/kernel.h"
 #include "include/drivers/keyboard/ps2.h"
 #include "include/vga/stdio.h"
 #include "include/drivers/ports/ports.h"
 #include "../../prog/src/include/terminal.h"
+#undef INCLUDE_FROM_KRNL
 
-int main(){
-    unsigned int* Usable_RAMSpace_Baseptr = ((unsigned int*)0x10000);
-    unsigned int* Usable_RAMSpace_length  = ((unsigned int*)0x10014);
-    extern volatile unsigned int* test_;
-    for (unsigned int i = 0; *(Usable_RAMSpace_Baseptr + i) != 0; ++i){
-        *(test_ + i) = *(Usable_RAMSpace_Baseptr + i);
-        *(test_ + i + 1) = 0;
-    }
+enum Return_codes_main main(){
+    enum Return_codes_main end_rcode = OK;
 
-    extern volatile unsigned int end_status;
-    end_status = 0;
-    unsigned int* main_ptr = (unsigned int*)&main;
-    unsigned int main_pointer = (unsigned int)main_ptr;
     extern volatile unsigned int position;
     position = 0;
-    char string[] = "Booted into kernel entry at 0x100000!\n\t   In main C func in kernel:";
+
     clear_screen(&position);
+    init_RAM();
+    
+    unsigned int* main_ptr = (unsigned int*)&main;
+    unsigned int main_pointer = (unsigned int)main_ptr;
+
+    char string[] = "Booted into kernel entry at 0x100000!\n\t   In main C func in kernel:";
     printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s\033\x06 %p\033\x00\n", string, main_pointer);
     init_idt();
     kb_init();
@@ -35,10 +33,8 @@ int main(){
     print_string("Source code: https://github.com/R4nd0mguy57/Open-source-OSDev-90HzOS/tree/main\n", 0x1F, &position);
 
     next_entry(0);
-    return end_status;
+    return end_rcode;
 }
-
-int extended_key;
 
 unsigned char handle_kb(){
     extern volatile unsigned char extended;
@@ -61,4 +57,34 @@ unsigned char handle_kb(){
         extended_key = 0;
         return keycode;
     }
+}
+
+enum Return_codes_main init_RAM(){
+    enum Return_codes_main initRAMrcode = OK;
+    printf("Setting Usable RAM Segments:\n");
+    // Set avail_RAM struct
+    unsigned int** base_ptr     =  (unsigned int**)BASE_PTR_INITRAM;
+    unsigned int*  len_ptr      =  (unsigned int*)LENGTH_INITRAM;
+
+    unsigned int*  base_ptr_val =  *(base_ptr); 
+    unsigned int   length       =  *(len_ptr);
+    unsigned int** arrBaseptr   =  initRAMstruct.baseptr;
+    unsigned int*  arrLenptr    =  initRAMstruct.length;
+
+    for (unsigned int i = 0; length != 0; ++i){
+        length = *(len_ptr + i);
+
+        *(arrBaseptr + i)       =  base_ptr_val;
+        *(arrLenptr  + i)       =  length;
+        ++(base_ptr_val);
+        *(arrBaseptr + i + 1)   =  0;
+        *(arrLenptr  + i + 1)   =  0;
+    }
+
+    for (unsigned int i = 0; *(arrLenptr + i) != 0; ++i){
+        printf("\t\033\6Chunk #%u : %p length: %u\tBytes\033\x0F\n", i, (*arrBaseptr + i), *(arrLenptr + i));
+    }
+    printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F Set up Usable RAM Segments\n");
+
+    return initRAMrcode;
 }
