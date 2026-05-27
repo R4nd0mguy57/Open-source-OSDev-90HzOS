@@ -76,6 +76,9 @@ enum Return_codes_main init_RAM(){
         length                  = *(len_ptr + i);
 
         base_ptr_val            =  (unsigned int*)*baseptr;
+        if (base_ptr_val == 0 && i > 0){
+            break;
+        }
         *(arrBaseptr + i)       =  base_ptr_val;
         *(arrLenptr  + i)       =  length;
         *(arrBaseptr + i + 1)   =  0;

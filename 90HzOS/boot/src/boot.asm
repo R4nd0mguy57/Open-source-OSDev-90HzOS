@@ -140,8 +140,8 @@ Get_RAM_Info:
         add esi, 0x04
         jmp RAMInfo_loop
     RAM_Info_return:
-        mov [Usable_RAMSpace_Baseptr + esi - 1], 0
-        mov [Usable_RAMSpace_length + esi - 1], 0
+        mov [Usable_RAMSpace_Baseptr + esi], 0
+        mov [Usable_RAMSpace_length + esi], 0
         mov esi, 0
         mov eax, 0
         ret
