@@ -5,16 +5,59 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 **Click Where you want to go!**
 - [Here](#go-to)
     - [OS Screenshots](#os-screenshots)
+    - [OS Features](#features)
+        - [VGA Features](#vga-features)
+        - [String Features](#string-features)
+        - [Keyboard Features](#ps/2-keyboard-features)
+            - [Driver Features](#kb-driver)
+            - [Keyboard API](#keyboard-driver-api)
     - [Compiling Tutorial (May need adaptations in Makefile)](#how-to-compile)
     - [How to run on QEMU](#how-to-run-on-qemu)
     - [How to run on VirtualBox](#how-to-run-on-virtualbox)
 
 ## OS Screenshots
-![OS Running](pictures/90HzOS.png)
-- 90HzOS while running
-- 
-![OS shutted down](pictures/shutdown.png)
-- 90HzOS while shutted down via ^Q(Ctrl + Q)
+- ![OS Running](pictures/90HzOS.png)
+    - 90HzOS while running
+- ![OS shutted down](pictures/shutdown.png)
+    - 90HzOS while shutted down via ^Q(Ctrl + Q)
+
+## FEATURES
+- This OS features, by now, only really basic things:
+    - ## **VGA FEATURES**:
+        - The OS is working in **VGA TEXT MODE** 80*25 grid (not that good but idcare for now), so here are **VGA TEXT MODE** function in my OS:
+            - print_string():      prints a string with a given color and position to the screen thanks to the printchar() func
+            - print_char():        prints a char to the screen with a given color and position
+            - clear_screen():      clears the screen
+            - setBG():             change the background color with a given color
+            - change_color():      changes the color of the background of a given single position (& given color)
+            - move_grid():         moves the **VGA TEXT MODE** grid.
+            - **And the longest one: printf() which is divided by other functions:**
+                - printf():             prints integers, unsigned integers, pointers, chars and strings inside of a given string with the sign: '%' in it, thanks to other functions
+                - print_integer():      prints an integer to screen
+                - print_uinteger():     prints an unsigned int to the screen
+                - print_hex():          prints a hexadecimal RAM adress
+    - ## **STRING FEATURES**:
+        - Some basic **strings functions**:
+            - reverse_string():     reverses the bytes position in string _(if input = {'a', 'b', 'c'}, then output = {'c', 'b', 'a'}_.
+            - replace_string():     copies the content of a given input to another, ouputs in a given 2nd input
+            - length():             outputs the length of a given string
+            - compare_string():     outputs 1 if all elements of two given strings are the same, otherwise: outputs 0
+    - ## PS/2 KEYBOARD FEATURES
+        - ## **KB DRIVER**
+            - Some Low level keyboard driver functions:
+                - init_idt():             initialize the **Interrupt Descriptor table** _(idt)_ and calls load_idt()
+                - load_idt():             loads the idt with lidt instruction
+                - kbinit():               outbyte at 0x21: 0b11111101 (activates only keyboard)
+                - enable_int():           enables CPU interrupts (only keyboard for now)
+                - keyboard_handler():     set in idt, manage each input on the keyboard (such as pressed / released, toogles Shift on or off, same for Ctrl and Alt btw)
+                - handle_keyboard():      in kernel.c, manage the output of the keyboard, if 0x64 returns 1, the kernel talk to 0x60 to get the scancode, manages extended keys too.
+        - ## **KEYBOARD DRIVER API**
+            - Some functions to easily access to the keyboard activity via this **API**:
+                - get_key():           outputs scancode _(does not wait for you to press smt, returns 0 if None keys are pressed)_
+                - init_keys():         initializes the API array's
+                - transkey():          takes a scancode as input and returns a struct of almost everything _(can manage Ctrl keybinds up to 6 appended inputs)_ _(Shift ON/OFF; Ctrl ON/OFF; Alt ON/OFF; ifchar; released; keypressed)_
+                - Shitkey():           Used by transkey, returns the input as shifted on the keyboard _(examples: q -> Q; 1 -> !...)_ _(Shift ON/OFF formula: Shift Pressed XOR CapsLock)_
+                - extended_char():     Also used by transkey, returns input if the key toogled is extended
 
 ## How To compile
 **PLZ NOTE THAT SOME COMMANDS WONT WORK ON WINDOWS, SO I RECOMMEND USING A UNIX/GNULinux SYSTEM**
