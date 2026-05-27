@@ -11,7 +11,9 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 
 ## OS Screenshots
 ![OS Running](pictures/90HzOS.png)
+- 90HzOS while running
 ![OS shutted down](pictures/shutdown.png)
+- 90HzOS while shutted down via ^Q(Ctrl + Q)
 
 ## How To compile
 **PLZ NOTE THAT SOME COMMANDS WONT WORK ON WINDOWS, SO I RECOMMEND USING A UNIX/GNULinux SYSTEM**
