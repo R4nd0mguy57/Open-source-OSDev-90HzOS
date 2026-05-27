@@ -3,7 +3,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 
 ## GO TO
 **Click Where you want to go!**
-    - [Here](#go-to)
+- [Here](#go-to)
     - [OS Screenshots](#os-screenshots)
     - [Compiling Tutorial (May need adaptations in Makefile)](#how-to-compile)
     - [How to run on QEMU](#how-to-run-on-qemu)
