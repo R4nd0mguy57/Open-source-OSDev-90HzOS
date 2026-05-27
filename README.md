@@ -8,7 +8,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
     - [OS Features](#features)
         - [VGA Features](#vga-features)
         - [String Features](#string-features)
-        - [Keyboard Features](#ps/2-keyboard-features)
+        - [Keyboard Features](#ps2-keyboard-features)
             - [Driver Features](#kb-driver)
             - [Keyboard API](#keyboard-driver-api)
     - [Compiling Tutorial (May need adaptations in Makefile)](#how-to-compile)
@@ -42,7 +42,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
             - replace_string():     copies the content of a given input to another, ouputs in a given 2nd input
             - length():             outputs the length of a given string
             - compare_string():     outputs 1 if all elements of two given strings are the same, otherwise: outputs 0
-    - ## PS/2 KEYBOARD FEATURES
+    - ## **PS2 KEYBOARD FEATURES**
         - ## **KB DRIVER**
             - Some Low level keyboard driver functions:
                 - init_idt():             initialize the **Interrupt Descriptor table** _(idt)_ and calls load_idt()
