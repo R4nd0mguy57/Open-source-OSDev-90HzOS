@@ -2,6 +2,7 @@
 This is the begining of my project _90HzOS_. (Sorry for bad english)
 
 ## GO TO
+**Click Where you want to go!**
     - [Here](#go-to)
     - [OS Screenshots](#os-screenshots)
     - [Compiling Tutorial (May need adaptations in Makefile)](#how-to-compile)
@@ -74,6 +75,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 **RUN THIS COMMAND**:
     - ``qemu-system-x86_64 -monitor stdio -hda ~/OSDev/90HzOS/OS/90HzOS.bin``
 ## HOW TO RUN ON VIRTUALBOX:
+**FLOPPY DISK USAGE**
     - Create a new virtual machine and set img/disk.img as floppy disk drive
      
      
