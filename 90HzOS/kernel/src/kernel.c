@@ -62,27 +62,29 @@ unsigned char handle_kb(){
 enum Return_codes_main init_RAM(){
     enum Return_codes_main initRAMrcode = OK;
     printf("Setting Usable RAM Segments:\n");
-    // Set avail_RAM struct
-    unsigned int** base_ptr     =  (unsigned int**)BASE_PTR_INITRAM;
-    unsigned int*  len_ptr      =  (unsigned int*)LENGTH_INITRAM;
 
-    unsigned int*  base_ptr_val =  *(base_ptr); 
+    // Set avail_RAM struct
+    unsigned int*  baseptr      =  (unsigned int*)  BASE_PTR_INITRAM;
+    unsigned int*  len_ptr      =  (unsigned int*)  LENGTH_INITRAM;
+
+    unsigned int*  base_ptr_val =  (unsigned int*)*baseptr; 
     unsigned int   length       =  *(len_ptr);
     unsigned int** arrBaseptr   =  initRAMstruct.baseptr;
     unsigned int*  arrLenptr    =  initRAMstruct.length;
 
     for (unsigned int i = 0; length != 0; ++i){
-        length = *(len_ptr + i);
+        length                  = *(len_ptr + i);
 
+        base_ptr_val            =  (unsigned int*)*baseptr;
         *(arrBaseptr + i)       =  base_ptr_val;
         *(arrLenptr  + i)       =  length;
-        ++(base_ptr_val);
         *(arrBaseptr + i + 1)   =  0;
         *(arrLenptr  + i + 1)   =  0;
+        ++(baseptr);
     }
 
     for (unsigned int i = 0; *(arrLenptr + i) != 0; ++i){
-        printf("\t\033\6Chunk #%u : %p length: %u\tBytes\033\x0F\n", i, (*arrBaseptr + i), *(arrLenptr + i));
+        printf("\t\033\6Chunk #%u : %p length: %u\tBytes\033\x0F\n", i, *(arrBaseptr + i), *(arrLenptr + i));
     }
     printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F Set up Usable RAM Segments\n");
 

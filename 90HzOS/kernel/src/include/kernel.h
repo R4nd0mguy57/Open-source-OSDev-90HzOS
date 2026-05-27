@@ -1,18 +1,19 @@
 #ifndef KERNEL_H
     #define KERNEL_H
 
-    #define KB_COMMAND              0x64
-    #define KB_DATA                 0x60
-
     #define VRAM_CHAR_ADR           0xB8000
     #define VRAM_ATT_ADR            0xB8001
     #define VGA_SCREEN_WIDTH        80
     #define VGA_SCREEN_HEIGHT       25
 
-    #define BASE_PTR_INITRAM        0x8000
-    #define LENGTH_INITRAM          0x9000
 
     #ifdef INCLUDE_FROM_KRNL
+
+        #define KB_COMMAND              0x64
+        #define KB_DATA                 0x60
+
+        #define BASE_PTR_INITRAM        0x8000
+        #define LENGTH_INITRAM          0x9000
 
         struct avail_RAM {
             unsigned int* baseptr[64];

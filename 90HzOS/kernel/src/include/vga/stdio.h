@@ -204,7 +204,7 @@
             }
         }
         else if (integer < 10){
-            switch (unit){
+            switch (integer){
                 case 0:
                     int_to_char = 48;
                     break;
@@ -373,7 +373,14 @@
                 conv_ptr_copy /= 16;
                 ++hex_len;
             }
-            *(ptr_string + hex_len) = 0;
+
+            *(ptr_string + 8) = 0;
+            unsigned char offset = 0;
+
+            for (unsigned int i = 0; i != (8-hex_len); ++i){
+                *(ptr_string + i) = 48;
+                offset += 1;
+            }
 
             unsigned int index = 0;
 
@@ -435,15 +442,15 @@
                         break;
                 ++index;
                 }
-                *(ptr_string + hex_len - i) = uptr_to_char;
+                *(ptr_string + hex_len - i + offset - 1) = uptr_to_char;
             }
-            for (unsigned int i = 0; 6-index-i-1 != 0; ++i){
+            /*for (unsigned int i = 0; 8-index-i-1 != 0; ++i){
                 *(ptr_string + index + i + 1) = 48;
                 *(ptr_string + index + i + 2) = 0;
-            }
+            }*/
         }
         else {
-            for (unsigned int i = 0; i != 6; ++i){
+            for (unsigned int i = 0; i != 8; ++i){
                 *(ptr_string + i) = 48;
                 *(ptr_string + i + 1) = 0;
             }
