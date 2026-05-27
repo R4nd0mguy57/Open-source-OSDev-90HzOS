@@ -12,6 +12,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 ## OS Screenshots
 ![OS Running](pictures/90HzOS.png)
 - 90HzOS while running
+- 
 ![OS shutted down](pictures/shutdown.png)
 - 90HzOS while shutted down via ^Q(Ctrl + Q)
 
