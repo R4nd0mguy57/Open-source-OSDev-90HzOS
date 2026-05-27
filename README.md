@@ -1,6 +1,17 @@
 ## Open Source OSDev Project made by a random GD French Player btw
 This is the begining of my project _90HzOS_. (Sorry for bad english)
 
+## GO TO
+[Here](#go-to)
+[OS Screenshots](#os-screenshots)
+[Compiling Tutorial (May need adaptations in Makefile)](#how-to-compile)
+[How to run on QEMU](#how-to-run-on-qemu)
+[How to run on VirtualBox](#how-to-run-on-virtualbox)
+
+## OS Screenshots
+![OS Running](pictures/90HzOS.png)
+![OS shutted down](pictures/shutdown.png)
+
 ## How To compile
 **PLZ NOTE THAT SOME COMMANDS WONT WORK ON WINDOWS, SO I RECOMMEND USING A UNIX/GNULinux SYSTEM**
 - 1. First you will need an emulator like qemu to run the 'OS' and an assembler:
@@ -62,6 +73,8 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
 ## HOW TO RUN ON QEMU
 **RUN THIS COMMAND**:
     - ``qemu-system-x86_64 -monitor stdio -hda ~/OSDev/90HzOS/OS/90HzOS.bin``
+## HOW TO RUN ON VIRTUALBOX:
+    - Create a new virtual machine and set img/disk.img as floppy disk drive
      
      
      
