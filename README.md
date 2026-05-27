@@ -60,7 +60,7 @@ This is the begining of my project _90HzOS_. (Sorry for bad english) This projec
                 - transkey():          takes a scancode as input and returns a struct of almost everything _(can manage Ctrl keybinds up to 6 appended inputs)_ _(Shift ON/OFF; Ctrl ON/OFF; Alt ON/OFF; ifchar; released; keypressed)_
                 - Shitkey():           Used by transkey, returns the input as shifted on the keyboard _(examples: q -> Q; 1 -> !...)_ _(Shift ON/OFF formula: Shift Pressed XOR CapsLock)_
                 - extended_char():     Also used by transkey, returns input if the key toogled is extended
-    - **## OTHER FUNCTIONS**:
+    - ## **OTHER FUNCTIONS**:
         - init_RAM(): describes in a struct, where the OS can write into RAM in several segments, associated with the length for each segment _(kernel.c func btw)_
 
 - ## **WHAT DOES THE COMPILED OS**:
