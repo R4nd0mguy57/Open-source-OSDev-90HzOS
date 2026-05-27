@@ -72,10 +72,10 @@ This is the begining of my project _90HzOS_. (Sorry for bad english)
     - If you are on Windows, try to adapt the code of the Makefile!
     
 ## HOW TO RUN ON QEMU
-**RUN THIS COMMAND**:
+- **RUN THIS COMMAND**:
     - ``qemu-system-x86_64 -monitor stdio -hda ~/OSDev/90HzOS/OS/90HzOS.bin``
 ## HOW TO RUN ON VIRTUALBOX:
-**FLOPPY DISK USAGE**
+- **FLOPPY DISK USAGE**
     - Create a new virtual machine and set img/disk.img as floppy disk drive
      
      
