@@ -11,6 +11,8 @@ This is the begining of my project _90HzOS_. (Sorry for bad english) This projec
         - [Keyboard Features](#ps2-keyboard-features)
             - [Driver Features](#kb-driver)
             - [Keyboard API](#keyboard-driver-api)
+    - [What does the compiled OS?](#what-does-the-compiled-os)
+        - [Other](#other-functions)
     - [Compiling Tutorial (May need adaptations in Makefile)](#how-to-compile)
     - [How to run on QEMU](#how-to-run-on-qemu)
     - [How to run on VirtualBox](#how-to-run-on-virtualbox)
@@ -58,6 +60,14 @@ This is the begining of my project _90HzOS_. (Sorry for bad english) This projec
                 - transkey():          takes a scancode as input and returns a struct of almost everything _(can manage Ctrl keybinds up to 6 appended inputs)_ _(Shift ON/OFF; Ctrl ON/OFF; Alt ON/OFF; ifchar; released; keypressed)_
                 - Shitkey():           Used by transkey, returns the input as shifted on the keyboard _(examples: q -> Q; 1 -> !...)_ _(Shift ON/OFF formula: Shift Pressed XOR CapsLock)_
                 - extended_char():     Also used by transkey, returns input if the key toogled is extended
+    - **## OTHER FUNCTIONS**:
+        - init_RAM(): describes in a struct, where the OS can write into RAM in several segments, associated with the length for each segment _(kernel.c func btw)_
+
+- ## **WHAT DOES THE COMPILED OS**:
+    - First the bootloader loads up at _0x7C00_ and loads **20 sectors** _(kernel entry + kernel)_ at 0x10000, which is moved to 0x100000 when switched to **32bit protected mode.**, it also get info about Usable RAM segments at 0x8000
+    - Then, it jumps at 0x100000 and execute the kernel entry point, who calls the main func in kernel.c, the kernel initialize the struct for usable memory segments, and initializes keyboard.
+    - Once all these steps done, it prints a welcome message and execute a hardcoded entry point for a program, here, its a pseudo-terminal where the only working command is: "_clear_".
+    - Once the terminal stopped, the main function returns and back to the entry point file _(entry.asm)_ it **halts the CPU until you shutdown the PC yourself**.
 
 ## How To compile
 **PLZ NOTE THAT SOME COMMANDS WONT WORK ON WINDOWS, SO I RECOMMEND USING A UNIX/GNULinux SYSTEM**
