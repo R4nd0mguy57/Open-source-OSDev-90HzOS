@@ -444,10 +444,6 @@
                 }
                 *(ptr_string + hex_len - i + offset - 1) = uptr_to_char;
             }
-            /*for (unsigned int i = 0; 8-index-i-1 != 0; ++i){
-                *(ptr_string + index + i + 1) = 48;
-                *(ptr_string + index + i + 2) = 0;
-            }*/
         }
         else {
             for (unsigned int i = 0; i != 8; ++i){

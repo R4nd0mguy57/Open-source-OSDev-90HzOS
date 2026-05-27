@@ -8,10 +8,12 @@ img/
 OS/
 vdi/
 build/
+bin/
 
 toolchain/
 opt/
 usr/
 var/
+sdb
 
 *.log
