@@ -1,5 +1,5 @@
 ## Open Source OSDev Project made by a random GD French Player btw
-This is the begining of my project _90HzOS_. (Sorry for bad english)
+This is the begining of my project _90HzOS_. (Sorry for bad english) This project **IS NOT PROFESSIONAL**
 
 ## GO TO
 **Click Where you want to go!**
