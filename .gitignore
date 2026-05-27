@@ -7,6 +7,7 @@ cross/
 img/
 OS/
 vdi/
+build/
 
 toolchain/
 opt/
