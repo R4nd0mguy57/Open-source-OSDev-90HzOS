@@ -3,6 +3,7 @@
 #include "include/drivers/keyboard/ps2.h"
 #include "include/vga/stdio.h"
 #include "include/drivers/ports/ports.h"
+#include "include/types.h"
 #include "../../prog/src/include/terminal.h"
 #undef INCLUDE_FROM_KRNL
 
