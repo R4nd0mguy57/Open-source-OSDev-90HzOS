@@ -2,7 +2,7 @@
     #define TYPES_H
 
     enum _null {
-        _NULL = -1,
+        _NULL_ = -1,
     };
 
     enum boolean {
