@@ -18,6 +18,8 @@
         struct avail_RAM {
             unsigned int* baseptr[64];
             unsigned int  length[64];
+            unsigned int* heap_begin;
+            unsigned int total_RAM;
         };
 
         struct avail_RAM initRAMstruct;

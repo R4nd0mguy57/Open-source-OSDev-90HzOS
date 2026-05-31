@@ -133,7 +133,9 @@
                         print_hex(int_ptr, &position);
                         break;
                     default:
-                        return;
+                        --i;
+                        print_char('%', Color, &position);
+                        continue;
                 }
                 continue;
             }

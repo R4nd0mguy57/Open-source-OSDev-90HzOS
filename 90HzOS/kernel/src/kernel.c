@@ -6,24 +6,33 @@
 #include "include/types.h"
 #include "../../prog/src/include/terminal.h"
 #undef INCLUDE_FROM_KRNL
+extern char kernel_end;
+#define HEAP_START (unsigned int*)&kernel_end
+#include "include/mem/mem_alloc.h"
+
+void init_heap(unsigned int total_RAM);
 
 enum Return_codes_main main(){
     enum Return_codes_main end_rcode = OK;
+    
+    unsigned int* main_ptr = (unsigned int*)&main;
+    unsigned int main_pointer = (unsigned int)main_ptr;
 
     extern volatile unsigned int position;
     position = 0;
 
     clear_screen(&position);
-    init_RAM();
-    
-    unsigned int* main_ptr = (unsigned int*)&main;
-    unsigned int main_pointer = (unsigned int)main_ptr;
-
     char string[] = "Booted into kernel entry at 0x100000!\n\t   In main C func in kernel:";
     printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s\033\x06 %p\033\x00\n", string, main_pointer);
+
+    init_RAM();
     init_idt();
     kb_init();
     enable_int();
+
+    unsigned int* kaka = malloc(sizeof(unsigned int));  /* Malloc Test */
+    *kaka = 2000000000;
+    printf("var adr == %p\n", kaka);
 
     replace_string(string, "Initialized keyboard.\n");
     printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F %s", string);
@@ -62,6 +71,7 @@ unsigned char handle_kb(){
 
 enum Return_codes_main init_RAM(){
     enum Return_codes_main initRAMrcode = OK;
+    printf("\033\x0CInitRAM Begin:\033\x0F\n");
     printf("Setting Usable RAM Segments:\n");
 
     // Set avail_RAM struct
@@ -70,6 +80,7 @@ enum Return_codes_main init_RAM(){
 
     unsigned int*  base_ptr_val =  (unsigned int*)*baseptr; 
     unsigned int   length       =  *(len_ptr);
+    unsigned int   total_len    =  length;
     unsigned int** arrBaseptr   =  initRAMstruct.baseptr;
     unsigned int*  arrLenptr    =  initRAMstruct.length;
 
@@ -85,12 +96,33 @@ enum Return_codes_main init_RAM(){
         *(arrBaseptr + i + 1)   =  0;
         *(arrLenptr  + i + 1)   =  0;
         ++(baseptr);
+        total_len += length;
     }
 
     for (unsigned int i = 0; *(arrLenptr + i) != 0; ++i){
         printf("\t\033\6Chunk #%u : %p length: %u\tBytes\033\x0F\n", i, *(arrBaseptr + i), *(arrLenptr + i));
     }
+    printf("Total Usable RAM:\033\x06 %u bytes\033\x0F\n", total_len);
     printf("\033\x07[\033\x0EPASS\033\x07]\033\x0F Set up Usable RAM Segments\n");
 
+    // Heap start
+
+    initRAMstruct.heap_begin    = (unsigned int*)&kernel_end;
+    initRAMstruct.total_RAM     = total_len;
+    printf("Set Kernel Heap to: \033\x06%p\033\x0F\n", initRAMstruct.heap_begin);
+    init_heap(total_len);
+
+    printf("\033\x0CInitRAM end.\033\x0F\n");
+
     return initRAMrcode;
+}
+
+void init_heap(unsigned int total_RAM){
+    *(HEAP_START) = 1;
+    *(HEAP_START + 1) = 8;
+    write_string((unsigned char*)"ENTRY", (HEAP_START + 2));
+    *(HEAP_START + 4) = 2;
+    total_RAM -= (total_RAM % 4);
+    *(HEAP_START + 4) = total_RAM - (sizeof(unsigned int) * 4);
+    return;
 }
